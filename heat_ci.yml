@@ -27,6 +27,10 @@ Parameters:
         Description: "The name of the software development project. "
         Type: "String"
         Default: "V3_Applications"
+    GerritUnixAccountPassword: 
+        Description: "A password used for the Gerrit user. "
+        Type: "String"
+        Default: "fuzzyface*@9"
     KeyName: 
         Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance. "
         Type: "String"
@@ -83,6 +87,7 @@ Resources:
     CIServer: 
         Type: "AWS::EC2::Instance"
         Properties: 
+            GerritUnixAccountPassword
             KeyName: {Ref: KeyName}
             #ImageId: {Fn::FindInMap: [InstanceId, {Ref: ImageName}, ImageId]}
             ImageId:  {Ref: ImageId}
@@ -95,6 +100,7 @@ Resources:
                     Fn::Replace:
                       - _project_name_: {Ref: ProjectName}
                         _base_domain_: {Ref: BaseDomain}
+                        _gerrit_account_password_: {Ref: GerritUnixAccountPassword}
                       - |
                         #!/bin/bash -v
                         apt-get -y update; apt-get -y upgrade
@@ -105,7 +111,9 @@ Resources:
                         wget https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_common.sh
                         chmod u+x install_common.sh
                         
-                        export project_name=_project_name_
+                        export PROJECT_NAME=_project_name_
+                        export BASE_DOMAIN=_base_domain_
+                        export GERRIT_ACCOUNT_PASSWORD=_gerrit_account_password_
                                                                                             
                         ./install_common.sh
 Outputs: 

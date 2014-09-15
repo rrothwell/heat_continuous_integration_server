@@ -36,7 +36,9 @@ echo "Installing Gerrit. "
 
 # E.g. http://gerrit-releases.storage.googleapis.com/gerrit-2.9.1.war
 
-adduser gerrit2
+useradd -m -s /bin/bash gerrit2
+echo "gerrit2:$GERRIT_ACCOUNT_PASSWORD" | chpasswd
+
 mkdir /usr/local/gerrit
 chown -R gerrit2:gerrit2 /usr/local/gerrit
 su gerrit2
