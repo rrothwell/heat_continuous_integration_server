@@ -9,6 +9,8 @@
 #	DNS
 # Resources:
 #	https://www.digitalocean.com/community/tutorials/how-to-install-gerrit-on-an-ubuntu-cloud-server
+# To run script standalone:
+# export PROJECT_NAME=GerritTest; export BASE_DOMAIN=V3.org;export GERRIT_ACCOUNT_PASSWORD=fuzzyface;./install_common.sh
 # ===========================================
 
 echo "Install common code for continuous integration server. "
@@ -41,11 +43,12 @@ echo "gerrit2:$GERRIT_ACCOUNT_PASSWORD" | chpasswd
 
 mkdir /usr/local/gerrit
 chown -R gerrit2:gerrit2 /usr/local/gerrit
-su gerrit2
 
-wget http://gerrit-releases.storage.googleapis.com/$GERRIT_WAR_NAME
+# Start execute block of commands as gerrit2 user.
 
-java -jar $GERRIT_WAR_NAME init --batch -d /usr/local/gerrit
+sudo -u gerrit2 wget http://gerrit-releases.storage.googleapis.com/$GERRIT_WAR_NAME
+
+sudo -u gerrit2 java -jar $GERRIT_WAR_NAME init --batch -d /usr/local/gerrit
 
 # To check:
 # git config -f /usr/local/gerrit/etc/gerrit.config gerrit.canonicalWebUrl
@@ -53,18 +56,19 @@ java -jar $GERRIT_WAR_NAME init --batch -d /usr/local/gerrit
 echo "Configure Gerrit. "
 
 # Change port away from default Tomcat port.
-git config -f /usr/local/gerrit/etc/gerrit.config --replace-all gerrit.canonicalWebUrl http://localhost:8085/
-git config -f /usr/local/gerrit/etc/gerrit.config --replace-all httpd.listenUrl http://*:8085/
+sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all gerrit.canonicalWebUrl http://localhost:8085/
+sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all httpd.listenUrl http://*:8085/
 
 # Set Gerrit for restart on server boot.
 echo "Setup Gerrit for reboot. "
 
 # 1. Tweak gerrit.sh control script.
-sed -i 's/# chkconfig: 3 99 99/chkconfig: 3 99 99/' /usr/local/gerrit/bin/gerrit.sh
-sed -i 's/# description: Gerrit Code Review/description: Gerrit Code Review/' /usr/local/gerrit/bin/gerrit.sh
-sed -i 's/# processname: gerrit/processname: gerrit/' /usr/local/gerrit/bin/gerrit.sh
-# 2. Obtain root privileges again.
-exit
+sudo -u gerrit2 sed -i 's/# chkconfig: 3 99 99/chkconfig: 3 99 99/' /usr/local/gerrit/bin/gerrit.sh
+sudo -u gerrit2 sed -i 's/# description: Gerrit Code Review/description: Gerrit Code Review/' /usr/local/gerrit/bin/gerrit.sh
+sudo -u gerrit2 sed -i 's/# processname: gerrit/processname: gerrit/' /usr/local/gerrit/bin/gerrit.sh
+
+# Finish execute block of commands as gerrit2 user.
+
 # 3. Tie in to the startup script mechanism.
 ln -snf `pwd`/usr/local/gerrit/bin/gerrit.sh /etc/init.d/gerrit
 ln -snf /etc/init.d/gerrit /etc/rc3.d/S90gerrit

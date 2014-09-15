@@ -109,13 +109,14 @@ Resources:
                         wget https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_java.sh
                         chmod u+x install_java.sh
                         wget https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_common.sh
-                        chmod u+x install_common.sh
+                        chmod ugo+x install_common.sh
                         
                         export PROJECT_NAME=_project_name_
                         export BASE_DOMAIN=_base_domain_
                         export GERRIT_ACCOUNT_PASSWORD=_gerrit_account_password_
                                                                                             
                         ./install_common.sh
+                        rm install_common.sh
 Outputs: 
     MasterNodeIp: 
         Description: "Login via ssh using this command: "
