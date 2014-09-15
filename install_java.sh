@@ -15,8 +15,8 @@
 # and limitations under the License.
 # ===========================================
 # install_java.sh
+# Environment: Ubuntu: 12.04
 # ===========================================
-# Install Java on ALL machines.
 # Oracle Java version 7
 
 # Ensure JAVA_HOME and PATH are setup?
