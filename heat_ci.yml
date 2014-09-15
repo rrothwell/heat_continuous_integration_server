@@ -96,7 +96,7 @@ Resources:
                         _base_domain_: {Ref: BaseDomain}
                       - |
                         #!/bin/bash -v
-                        apt-get update; apt-get upgrade
+                        apt-get -y update; apt-get -y upgrade
                         updatedb
                         cd /tmp
                         wget https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_java.sh

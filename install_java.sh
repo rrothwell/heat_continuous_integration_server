@@ -23,7 +23,7 @@
 # ===========================================
 
 #Register repo
-add-apt-repository ppa:webupd8team/java
+add-apt-repository -y ppa:webupd8team/java
 apt-get -q -y update 
 
 # Bypass Oracle license dialog.
