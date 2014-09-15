@@ -15,6 +15,8 @@ echo "Install common code for continuous integration server. "
 
 GERRRIT_WAR_NAME="gerrit-2.9.1.war"
 
+echo $GERRRIT_WAR_NAME
+
 # Preparation.
 apt-get -y install python-software-properties python-setuptools 
 
