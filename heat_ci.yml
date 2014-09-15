@@ -1,0 +1,121 @@
+# ===========================================
+# Copyright NeCTAR, September 2014, all rights reserved.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License"); 
+# you may not use this file except in compliance with the License. 
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, 
+# software distributed under the License is distributed on an "AS IS" BASIS, 
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+# See the License for the specific language governing permissions 
+# and limitations under the License.
+# ===========================================
+# heat_ci.yml
+# A heat script to build a continuous integration server.
+# manifest:
+# 0. Python
+# 1. Gerrit/Git
+# 2. Jenkins
+# ===========================================
+HeatTemplateFormatVersion: '2012-12-12'
+Description: "A Continuous Integration Server. "
+Parameters: 
+    ProjectName: 
+        Description: "The name of the software development project. "
+        Type: "String"
+        Default: "V3_Applications"
+    KeyName: 
+        Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance. "
+        Type: "String"
+        Default: "richardr_on_nectar"
+    InstanceType:
+        Description: "The size of the VM. "
+        Type: String
+        Default: "m1.small"
+        AllowedValues:
+            - m1.small
+            - m1.medium
+            - m1.large
+            - m1.xlarge
+            - m1.xxlarge
+    ImageId:
+        Description: "The base VM image used to build the CI server. "
+        Type: String
+        Default: "ubuntu-12.04"
+        #AllowedValues: ["ubuntu-12.04","ubuntu-12.4"]
+    AvailabilityZone: 
+        Description: "Physical location of the CI server. "
+        Type: String
+        Default: "NCI"
+        AllowedValues:
+            - NCI
+            - melbourne
+            - melbourne-np
+            - melbourne-qh2
+            - qld
+            - sa
+    BaseDomain: 
+        Description: "DynDNS base domain name.  domain names. "
+        Type: String
+        Default: "doesntexist.org"
+#Mappings:
+#    InstanceId:
+#        'ubuntu-12.04': {ImageId: c64cacf2-c269-4a95-aae6-7f1a3913f9eb}
+Resources: 
+    # http://docs.openstack.org/developer/heat/template_guide/cfn.html#AWS::EC2::SecurityGroup
+    DefaultSecurityGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Standard firewall rules
+            SecurityGroupIngress:
+                - {IpProtocol: icmp, FromPort: '-1', ToPort: '-1', CidrIp : 0.0.0.0/0}
+                - {IpProtocol: tcp, FromPort: '22', ToPort: '22', CidrIp: 0.0.0.0/0}
+                - {IpProtocol: tcp, FromPort: '80', ToPort: '80', CidrIp: 0.0.0.0/0}
+                - {IpProtocol: tcp, FromPort: '443', ToPort: '443', CidrIp: 0.0.0.0/0}
+                - {IpProtocol: tcp, FromPort: '29418', ToPort: '29418', CidrIp: 0.0.0.0/0}               
+                        
+# http://docs.openstack.org/developer/heat/template_guide/cfn.html#AWS::EC2::Instance
+# To get the node IP address see: https://wiki.openstack.org/wiki/Heat/ApplicationDeployment
+    CIServer: 
+        Type: "AWS::EC2::Instance"
+        Properties: 
+            KeyName: {Ref: KeyName}
+            #ImageId: {Fn::FindInMap: [InstanceId, {Ref: ImageName}, ImageId]}
+            ImageId:  {Ref: ImageId}
+            InstanceType: {Ref: InstanceType}
+            AvailabilityZone: {Ref: AvailabilityZone}
+            SecurityGroups: 
+                - {Ref: "DefaultSecurityGroup"}
+            UserData:
+                Fn::Base64:
+                    Fn::Replace:
+                      - _project_name_: {Ref: ProjectName}
+                        _base_domain_: {Ref: BaseDomain}
+                      - |
+                        #!/bin/bash -v
+                        apt-get update; apt-get upgrade
+                        updatedb
+                        cd /tmp
+                        wget https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_java.sh
+                        chmod u+x install_java.sh
+                        wget https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_common.sh
+                        chmod u+x install_common.sh
+                        
+                        export project_name=_project_name_
+                                                                                            
+                        ./install_common.sh
+Outputs: 
+    MasterNodeIp: 
+        Description: "Login via ssh using this command: "
+        Value: 
+            Fn::Join: 
+                - ""
+                - 
+                    - "ssh -i /local/path/to/private/key/file.pem root@"
+                    - 
+                        Fn::GetAtt: 
+                            - "CIServer"
+                            - "PublicIp"
