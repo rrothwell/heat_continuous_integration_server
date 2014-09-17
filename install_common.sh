@@ -8,6 +8,8 @@
 #	Gerrit with H2 database and default encryption level.
 #	DNS
 # Resources:
+#	http://gerrit-review.googlesource.com/Documentation/install-quick.html
+#	http://gerrit-review.googlesource.com/Documentation/install.html
 #	https://www.digitalocean.com/community/tutorials/how-to-install-gerrit-on-an-ubuntu-cloud-server
 # To run script standalone:
 # export PROJECT_NAME=GerritTest; export BASE_DOMAIN=V3.org;export GERRIT_ACCOUNT_PASSWORD=fuzzyface;./install_common.sh
@@ -56,24 +58,24 @@ sudo -u gerrit2 java -jar $GERRIT_WAR_NAME init --batch -d /usr/local/gerrit
 echo "Configure Gerrit. "
 
 # Change port away from default Tomcat port.
-sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all gerrit.canonicalWebUrl http://localhost:8085/
-sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all httpd.listenUrl http://*:8085/
+#sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all gerrit.canonicalWebUrl http://localhost:8085/
+#sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all httpd.listenUrl http://*:8085/
 
 # Set Gerrit for restart on server boot.
 echo "Setup Gerrit for reboot. "
 
 # 1. Tweak gerrit.sh control script.
-sudo -u gerrit2 sed -i 's/# chkconfig: 3 99 99/chkconfig: 3 99 99/' /usr/local/gerrit/bin/gerrit.sh
-sudo -u gerrit2 sed -i 's/# description: Gerrit Code Review/description: Gerrit Code Review/' /usr/local/gerrit/bin/gerrit.sh
-sudo -u gerrit2 sed -i 's/# processname: gerrit/processname: gerrit/' /usr/local/gerrit/bin/gerrit.sh
+#sudo -u gerrit2 sed -i 's/# chkconfig: 3 99 99/chkconfig: 3 99 99/' /usr/local/gerrit/bin/gerrit.sh
+#sudo -u gerrit2 sed -i 's/# description: Gerrit Code Review/description: Gerrit Code Review/' /usr/local/gerrit/bin/gerrit.sh
+#sudo -u gerrit2 sed -i 's/# processname: gerrit/processname: gerrit/' /usr/local/gerrit/bin/gerrit.sh
 
 # Finish execute block of commands as gerrit2 user.
 
 # 3. Tie in to the startup script mechanism.
-ln -snf `pwd`/usr/local/gerrit/bin/gerrit.sh /etc/init.d/gerrit
-ln -snf /etc/init.d/gerrit /etc/rc3.d/S90gerrit
+#ln -snf `pwd`/usr/local/gerrit/bin/gerrit.sh /etc/init.d/gerrit
+#ln -snf /etc/init.d/gerrit /etc/rc3.d/S90gerrit
 # 4. Impose changes by restarting server.
-/usr/local/gerrit/bin/gerrit.sh restart
+#/usr/local/gerrit/bin/gerrit.sh restart
 
 echo "Installation complete. "
 echo "Complete the process by logging in at http://localhost:8085/ and creating a superadmin account. "
