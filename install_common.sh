@@ -44,13 +44,15 @@ useradd -m -s /bin/bash gerrit2
 echo "gerrit2:$GERRIT_ACCOUNT_PASSWORD" | chpasswd
 
 mkdir /usr/local/gerrit
-chown -R gerrit2:gerrit2 /usr/local/gerrit
+#chown -R gerrit2:gerrit2 /usr/local/gerrit
 
 # Start execute block of commands as gerrit2 user.
 
-sudo -u gerrit2 wget http://gerrit-releases.storage.googleapis.com/$GERRIT_WAR_NAME
+#sudo -u gerrit2 wget http://gerrit-releases.storage.googleapis.com/$GERRIT_WAR_NAME
+sudo wget http://gerrit-releases.storage.googleapis.com/$GERRIT_WAR_NAME
 
-sudo -u gerrit2 java -jar $GERRIT_WAR_NAME init --batch -d /usr/local/gerrit
+#sudo -u gerrit2 java -jar $GERRIT_WAR_NAME init --batch -d /usr/local/gerrit
+sudo java -jar $GERRIT_WAR_NAME init --batch -d /usr/local/gerrit
 
 # To check:
 # git config -f /usr/local/gerrit/etc/gerrit.config gerrit.canonicalWebUrl
