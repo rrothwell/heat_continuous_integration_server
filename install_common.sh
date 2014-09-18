@@ -20,6 +20,7 @@ echo "Install common code for continuous integration server. "
 
 GERRIT_WAR_NAME="gerrit-2.9.1.war"
 GERRIT_CONFIG="/usr/local/gerrit/etc/gerrit.config"
+GERRIT_SCRIPT="/usr/local/gerrit/bin/gerrit.sh"
 
 echo $GERRIT_WAR_NAME
 
