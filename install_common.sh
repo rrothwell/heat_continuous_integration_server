@@ -45,11 +45,10 @@ useradd -m -s /bin/bash gerrit2
 echo "gerrit2:$GERRIT_ACCOUNT_PASSWORD" | chpasswd
 
 mkdir /usr/local/gerrit
+wget http://gerrit-releases.storage.googleapis.com/$GERRIT_WAR_NAME
+java -jar $GERRIT_WAR_NAME init --batch --site-path /usr/local/gerrit
+
 chown -R gerrit2:gerrit2 /usr/local/gerrit
-
-sudo -u gerrit2 wget http://gerrit-releases.storage.googleapis.com/$GERRIT_WAR_NAME
-
-sudo -u gerrit2 java -jar $GERRIT_WAR_NAME init --batch --site-path /usr/local/gerrit
 
 # To check:
 # git config -f /usr/local/gerrit/etc/gerrit.config gerrit.canonicalWebUrl
@@ -85,7 +84,7 @@ echo "Setup Gerrit for reboot. "
 sudo -u gerrit2 $GERRIT_SCRIPT restart
 
 echo "Installation complete. "
-echo "Complete the process by logging in at http://localhost:8085/ and creating a superadmin account. "
+echo "Complete the process by logging in at http://$IP_ADDRESS:8080/ and creating a superadmin account. "
 echo "Visit http://gerrit-review.googlesource.com/Documentation/install.html for instructions. "
 
 
