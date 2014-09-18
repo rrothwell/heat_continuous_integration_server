@@ -19,7 +19,6 @@ echo "Install common code for continuous integration server. "
 
 GERRIT_WAR_NAME="gerrit-2.9.1.war"
 GERRIT_CONFIG="/usr/local/gerrit/etc/gerrit.config"
-GERRIT_SCRIPT="/usr/local/gerrit/bin/gerrit.sh"
 
 echo $GERRIT_WAR_NAME
 
@@ -46,11 +45,11 @@ useradd -m -s /bin/bash gerrit2
 echo "gerrit2:$GERRIT_ACCOUNT_PASSWORD" | chpasswd
 
 mkdir /usr/local/gerrit
-
-sudo wget http://gerrit-releases.storage.googleapis.com/$GERRIT_WAR_NAME
-
-java -jar $GERRIT_WAR_NAME init --batch -d /usr/local/gerrit
 chown -R gerrit2:gerrit2 /usr/local/gerrit
+
+sudo -u gerrit2 wget http://gerrit-releases.storage.googleapis.com/$GERRIT_WAR_NAME
+
+sudo -u gerrit2 java -jar $GERRIT_WAR_NAME init --batch --site-path /usr/local/gerrit
 
 # To check:
 # git config -f /usr/local/gerrit/etc/gerrit.config gerrit.canonicalWebUrl
@@ -60,8 +59,13 @@ echo "Configure Gerrit. "
 # Start execute block of commands as gerrit2 user.
 
 # Change port away from default Tomcat port.
-sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all gerrit.canonicalWebUrl http://localhost:8085/
-sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all httpd.listenUrl http://*:8085/
+# This does not work so connections to port 8085 fail.
+#sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all gerrit.canonicalWebUrl http://localhost:8085/
+#sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all httpd.listenUrl http://*:8085/
+
+# OpenID needs a real URL. localhost doesn't cut it.
+sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all gerrit.canonicalWebUrl http://$IP_ADDRESS:8080/
+sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all container.user gerrit2
 
 # Set Gerrit for restart on server boot.
 echo "Setup Gerrit for reboot. "
@@ -78,7 +82,7 @@ echo "Setup Gerrit for reboot. "
 #ln -snf /etc/init.d/gerrit /etc/rc3.d/S90gerrit
 
 # 4. Impose changes by restarting server.
-$GERRIT_SCRIPT restart
+sudo -u gerrit2 $GERRIT_SCRIPT restart
 
 echo "Installation complete. "
 echo "Complete the process by logging in at http://localhost:8085/ and creating a superadmin account. "

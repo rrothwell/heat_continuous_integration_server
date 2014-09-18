@@ -48,7 +48,7 @@ Parameters:
     ImageId:
         Description: "The base VM image used to build the CI server. "
         Type: String
-        Default: "ubuntu-12.04"
+        Default: "574e0ad4-7246-4f9e-bb13-87a941d3ddf9" # ubuntu-12.04.4
         #AllowedValues: ["ubuntu-12.04","ubuntu-12.4"]
     AvailabilityZone: 
         Description: "Physical location of the CI server. "
@@ -84,14 +84,13 @@ Resources:
         Properties:
             GroupDescription: Gerrit firewall rules. Web and Git interfaces.
             SecurityGroupIngress:
-                - {IpProtocol: tcp, FromPort: '8085', ToPort: '8085', CidrIp: 0.0.0.0/0}
+                - {IpProtocol: tcp, FromPort: '8080', ToPort: '8080', CidrIp: 0.0.0.0/0}
                 - {IpProtocol: tcp, FromPort: '29418', ToPort: '29418', CidrIp: 0.0.0.0/0}                                       
 # http://docs.openstack.org/developer/heat/template_guide/cfn.html#AWS::EC2::Instance
 # To get the node IP address see: https://wiki.openstack.org/wiki/Heat/ApplicationDeployment
     CIServer: 
         Type: "AWS::EC2::Instance"
         Properties: 
-            GerritUnixAccountPassword
             KeyName: {Ref: KeyName}
             #ImageId: {Fn::FindInMap: [InstanceId, {Ref: ImageName}, ImageId]}
             ImageId:  {Ref: ImageId}
@@ -99,6 +98,7 @@ Resources:
             AvailabilityZone: {Ref: AvailabilityZone}
             SecurityGroups: 
                 - {Ref: "DefaultSecurityGroup"}
+                - {Ref: "GerritSecurityGroup"}
             UserData:
                 Fn::Base64:
                     Fn::Replace:
@@ -108,23 +108,25 @@ Resources:
                       - |
                         #!/bin/bash -v
                         apt-get -y update; apt-get -y upgrade
+
                         updatedb
                         cd /tmp
-                        wget https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_java.sh
+                        wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_java.sh
                         chmod u+x install_java.sh
-                        wget https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_common.sh
+                        wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_common.sh
                         chmod u+x install_common.sh
                         
                         export PROJECT_NAME=_project_name_
                         export BASE_DOMAIN=_base_domain_
                         export GERRIT_ACCOUNT_PASSWORD=_gerrit_account_password_
+                        export IP_ADDRESS=`wget -qO -  http://169.254.169.254/latest/meta-data/local-ipv4`
                                                                                             
                         ./install_common.sh
                         
                         rm install_common.sh
                         rm install_java.sh
 Outputs: 
-    MasterNodeIp: 
+    GerritNodeIp: 
         Description: "Login via ssh using this command: "
         Value: 
             Fn::Join: 
