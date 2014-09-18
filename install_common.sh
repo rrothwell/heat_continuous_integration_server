@@ -11,8 +11,9 @@
 #	http://gerrit-review.googlesource.com/Documentation/install-quick.html
 #	http://gerrit-review.googlesource.com/Documentation/install.html
 #	https://www.digitalocean.com/community/tutorials/how-to-install-gerrit-on-an-ubuntu-cloud-server
+#	http://dachary.org/?p=1716 (Gerrit and Jenkins)
 # To run script standalone:
-# export PROJECT_NAME=GerritTest; export BASE_DOMAIN=V3.org;export GERRIT_ACCOUNT_PASSWORD=fuzzyface;./install_common.sh
+# export PROJECT_NAME=GerritTest; export BASE_DOMAIN=V3.org;export GERRIT_ACCOUNT_PASSWORD=fuzzyface;export IP_ADDRESS=130.56.252.24;./install_common.sh
 # ===========================================
 
 echo "Install common code for continuous integration server. "

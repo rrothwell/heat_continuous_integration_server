@@ -46,7 +46,7 @@ Parameters:
             - m1.xlarge
             - m1.xxlarge
     ImageId:
-        Description: "The base VM image used to build the CI server. "
+        Description: "The base VM image used to build the CI server. This needs to have the python tools installed."
         Type: String
         Default: "574e0ad4-7246-4f9e-bb13-87a941d3ddf9" # ubuntu-12.04.4
         #AllowedValues: ["ubuntu-12.04","ubuntu-12.4"]
@@ -117,16 +117,20 @@ Resources:
                         chmod u+x install_common.sh
                         
                         export PROJECT_NAME=_project_name_
+                        echo $PROJECT_NAME
                         export BASE_DOMAIN=_base_domain_
+                        echo $BASE_DOMAIN
                         export GERRIT_ACCOUNT_PASSWORD=_gerrit_account_password_
+                        echo $GERRIT_ACCOUNT_PASSWORD
                         export IP_ADDRESS=`wget -qO -  http://169.254.169.254/latest/meta-data/local-ipv4`
+                        echo $IP_ADDRESS
                                                                                             
                         ./install_common.sh
                         
                         rm install_common.sh
                         rm install_java.sh
 Outputs: 
-    GerritNodeIp: 
+    GerritSSHAccess: 
         Description: "Login via ssh using this command: "
         Value: 
             Fn::Join: 

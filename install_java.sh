@@ -18,24 +18,41 @@
 # Environment: Ubuntu: 12.04
 # ===========================================
 # Oracle Java version 7
+# Oracle Java download can become excruciatingly slow, hence favour openjdk-7-jdk
 
 # Ensure JAVA_HOME and PATH are setup?
+
+# Resources:
+#	https://www.digitalocean.com/community/tutorials/how-to-install-java-on-ubuntu-with-apt-get
 # ===========================================
 
-#Register repo
-add-apt-repository -y ppa:webupd8team/java
-apt-get -q -y update 
+JDK=
+#JDK=Oracle
 
-# Bypass Oracle license dialog.
-echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
-echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
+if [JDK=Oracle]; then
+	#Register repo
+	add-apt-repository -y ppa:webupd8team/java
+	apt-get -q -y update 
 
-# Install.
-apt-get -y install java-common  oracle-java7-installer  oracle-java7-set-default
+	# Bypass Oracle license dialog.
+	echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections
+	echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
 
-# Register alternatives. Maybe some redundancy here that can be removed later.
-update-java-alternatives -s java-7-oracle
+	# Install.
+	apt-get -y install java-common  oracle-java7-installer  oracle-java7-set-default
 
-# Set the JAVA environment variables.
-echo -e "\n\nJAVA_HOME=/usr/lib/jvm/java-7-oracle" >> /etc/environment;
-export JAVA_HOME=/usr/lib/jvm/java-7-oracle/
+	# Register alternatives. Maybe some redundancy here that can be removed later.
+	update-java-alternatives -s java-7-oracle
+
+	# Set the JAVA environment variables.
+	echo -e "\n\nJAVA_HOME=/usr/lib/jvm/java-7-oracle" >> /etc/environment;
+	export JAVA_HOME=/usr/lib/jvm/java-7-oracle/
+	
+else
+	apt-get install -y openjdk-7-jdk
+
+	# Set the JAVA environment variables.
+	echo -e "\n\nJAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64" >> /etc/environment;
+	export JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64/
+fi
+
