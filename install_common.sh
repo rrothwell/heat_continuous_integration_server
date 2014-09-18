@@ -60,11 +60,16 @@ echo "Configure Gerrit. "
 
 # Change port away from default Tomcat port.
 # This does not work so connections to port 8085 fail.
+# Failures probably due to local organisation's proxy.
+# The ssh connection to port 29418 can also be blocked by the local proxy.
 #sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all gerrit.canonicalWebUrl http://localhost:8085/
 #sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all httpd.listenUrl http://*:8085/
 
 # OpenID needs a real URL. localhost doesn't cut it.
-sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all gerrit.canonicalWebUrl http://$IP_ADDRESS:8080/
+# OpenID to Google is broken due to Google's deprecation policy from May 22 2014.
+# Use Yahoo OpenID instead until Gerrit is updated to new version.
+sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all gerrit.canonicalWebUrl http://$DOMAIN_NAME:8080/
+sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all httpd.listenUrl http://$DOMAIN_NAME:8080/
 sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all container.user gerrit2
 
 # Set Gerrit for restart on server boot.
@@ -85,7 +90,7 @@ echo "Setup Gerrit for reboot. "
 sudo -u gerrit2 $GERRIT_SCRIPT restart
 
 echo "Installation complete. "
-echo "Complete the process by logging in at http://$IP_ADDRESS:8080/ and creating a superadmin account. "
+echo "Complete the process by logging in at http://$DOMAIN_NAME:8080/ and creating a superadmin account. "
 echo "Visit http://gerrit-review.googlesource.com/Documentation/install.html for instructions. "
 
 
