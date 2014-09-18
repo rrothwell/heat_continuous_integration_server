@@ -69,7 +69,7 @@ echo "Configure Gerrit. "
 # OpenID to Google is broken due to Google's deprecation policy from May 22 2014.
 # Use Yahoo OpenID instead until Gerrit is updated to new version.
 sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all gerrit.canonicalWebUrl http://$DOMAIN_NAME:8080/
-sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all httpd.listenUrl http://$DOMAIN_NAME:8080/
+sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all httpd.listenUrl http://$DOMAIN_NAME:8080
 sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all container.user gerrit2
 
 # Set Gerrit for restart on server boot.

@@ -64,7 +64,7 @@ Parameters:
     UrlDomainName: # Use DynDNS or similar service to create s domain name.
         Description: "Domain name. "
         Type: String
-        Default: "gerrit.dontexist.org"
+        Default: "gerrit.dontexist.com"
 #Mappings:
 #    InstanceId:
 #        'ubuntu-12.04': {ImageId: c64cacf2-c269-4a95-aae6-7f1a3913f9eb}
