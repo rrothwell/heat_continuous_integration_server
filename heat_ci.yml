@@ -125,10 +125,10 @@ Resources:
                         export IP_ADDRESS=`wget -qO -  http://169.254.169.254/latest/meta-data/local-ipv4`
                         echo $IP_ADDRESS
                                                                                             
-                        ./install_common.sh
+                        #./install_common.sh
                         
-                        rm install_common.sh
-                        rm install_java.sh
+                        #rm install_common.sh
+                        #rm install_java.sh
 Outputs: 
     GerritSSHAccess: 
         Description: "Login via ssh using this command: "

@@ -29,7 +29,7 @@
 JDK=
 #JDK=Oracle
 
-if [JDK=Oracle]; then
+if [ "$JDK" == "Oracle" ]; then
 	#Register repo
 	add-apt-repository -y ppa:webupd8team/java
 	apt-get -q -y update 
