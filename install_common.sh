@@ -87,7 +87,7 @@ echo "Setup Gerrit for reboot. "
 #ln -snf /etc/init.d/gerrit /etc/rc3.d/S90gerrit
 
 # 4. Impose changes by restarting server.
-sudo $GERRIT_SCRIPT restart
+$GERRIT_SCRIPT restart
 
 echo "Installation complete. "
 echo "Complete the process by logging in at http://$DOMAIN_NAME:8080/ and creating a superadmin account. "
