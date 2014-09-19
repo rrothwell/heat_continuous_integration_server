@@ -77,17 +77,20 @@ sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all 
 echo "Setup Gerrit for reboot. "
 
 # 1. Tweak gerrit.sh control script.
-#sudo -u gerrit2 sed -i 's/# chkconfig: 3 99 99/chkconfig: 3 99 99/' $GERRIT_SCRIPT
-#sudo -u gerrit2 sed -i 's/# description: Gerrit Code Review/description: Gerrit Code Review/' $GERRIT_SCRIPT
-#sudo -u gerrit2 sed -i 's/# processname: gerrit/processname: gerrit/' $GERRIT_SCRIPT
+sudo -u gerrit2 sed -i 's/# chkconfig: 3 99 99/chkconfig: 3 99 99/' $GERRIT_SCRIPT
+sudo -u gerrit2 sed -i 's/# description: Gerrit Code Review/description: Gerrit Code Review/' $GERRIT_SCRIPT
+sudo -u gerrit2 sed -i 's/# processname: gerrit/processname: gerrit/' $GERRIT_SCRIPT
 
 # Finish execute block of commands as gerrit2 user.
 
 # 3. Tie in to the startup script mechanism.
-#ln -snf `pwd`/usr/local/gerrit/bin/gerrit.sh /etc/init.d/gerrit
-#ln -snf /etc/init.d/gerrit /etc/rc3.d/S90gerrit
+ln -snf `pwd`/usr/local/gerrit/bin/gerrit.sh /etc/init.d/gerrit
+ln -snf /etc/init.d/gerrit /etc/rc3.d/S90gerrit
 
 # 4. Impose changes by restarting server.
+
+echo "Restart Gerrit to notice changed settings. "
+
 $GERRIT_SCRIPT restart
 
 echo "Installation complete. "
