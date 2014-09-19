@@ -3,10 +3,13 @@
 # Install Common Code for Continuous Integration Server
 #
 # Sets up:
+#	Python
 #	Git
 #	Java
 #	Gerrit with H2 database and default encryption level.
-#	DNS
+#	DNS (DynDNS is configured manually)
+#	Email (not done yet)
+#	Jenkins (not done yet)
 # Resources:
 #	http://gerrit-review.googlesource.com/Documentation/install-quick.html
 #	http://gerrit-review.googlesource.com/Documentation/install.html
@@ -77,6 +80,8 @@ sudo -u gerrit2 git config -f /usr/local/gerrit/etc/gerrit.config --replace-all 
 echo "Setup Gerrit for reboot. "
 
 # 1. Tweak gerrit.sh control script.
+# Ubuntu complains about this. Seems it has removed chkconfig,
+# See: http://askubuntu.com/questions/221293/why-is-chkconfig-no-longer-available-in-ubuntu
 sudo -u gerrit2 sed -i 's/# chkconfig: 3 99 99/chkconfig: 3 99 99/' $GERRIT_SCRIPT
 sudo -u gerrit2 sed -i 's/# description: Gerrit Code Review/description: Gerrit Code Review/' $GERRIT_SCRIPT
 sudo -u gerrit2 sed -i 's/# processname: gerrit/processname: gerrit/' $GERRIT_SCRIPT
