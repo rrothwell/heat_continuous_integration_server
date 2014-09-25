@@ -1,6 +1,6 @@
 #!/bin/bash
 # ===========================================
-# Install Common Code for Continuous Integration Server
+# Install Common Code for Gerrit Server
 #
 # Sets up:
 #	Python
@@ -9,7 +9,6 @@
 #	Gerrit with H2 database and default encryption level.
 #	DNS (DynDNS is configured manually)
 #	Email (not done yet)
-#	Jenkins (not done yet)
 # Resources:
 #	http://gerrit-review.googlesource.com/Documentation/install-quick.html
 #	http://gerrit-review.googlesource.com/Documentation/install.html
@@ -19,7 +18,7 @@
 # export PROJECT_NAME=GerritTest; export BASE_DOMAIN=V3.org;export GERRIT_ACCOUNT_PASSWORD=fuzzyface;export IP_ADDRESS=130.56.252.24;./install_common.sh
 # ===========================================
 
-echo "Install common code for continuous integration server. "
+echo "Install common code for Gerrit server. "
 
 GERRIT_WAR_NAME="gerrit-2.9.1.war"
 GERRIT_CONFIG="/usr/local/gerrit/etc/gerrit.config"

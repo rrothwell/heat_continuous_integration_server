@@ -13,15 +13,14 @@
 # See the License for the specific language governing permissions 
 # and limitations under the License.
 # ===========================================
-# heat_ci.yml
-# A heat script to build a continuous integration server.
+# heat_gerrit.yml
+# A heat script to build a gerrit server.
 # manifest:
 # 0. Python
 # 1. Gerrit/Git
-# 2. Jenkins
 # ===========================================
 HeatTemplateFormatVersion: '2012-12-12'
-Description: "A Continuous Integration Server. "
+Description: "A Gerrit Code Review Server. "
 Parameters: 
     ProjectName: 
         Description: "The name of the software development project. "
@@ -46,12 +45,12 @@ Parameters:
             - m1.xlarge
             - m1.xxlarge
     ImageId:
-        Description: "The base VM image used to build the CI server. This needs to have the python tools installed."
+        Description: "The base VM image used to build the Gerrit server. This needs to have the python tools installed."
         Type: String
         Default: "574e0ad4-7246-4f9e-bb13-87a941d3ddf9" # ubuntu-12.04.4
         #AllowedValues: ["ubuntu-12.04","ubuntu-12.4"]
     AvailabilityZone: 
-        Description: "Physical location of the CI server. "
+        Description: "Physical location of the Gerrit server. "
         Type: String
         Default: "NCI"
         AllowedValues:
@@ -88,7 +87,7 @@ Resources:
                 - {IpProtocol: tcp, FromPort: '29418', ToPort: '29418', CidrIp: 0.0.0.0/0}                                       
 # http://docs.openstack.org/developer/heat/template_guide/cfn.html#AWS::EC2::Instance
 # To get the node IP address see: https://wiki.openstack.org/wiki/Heat/ApplicationDeployment
-    CIServer: 
+    GerritServer: 
         Type: "AWS::EC2::Instance"
         Properties: 
             KeyName: {Ref: KeyName}
@@ -139,5 +138,5 @@ Outputs:
                     - "ssh -i /local/path/to/private/key/file.pem root@"
                     - 
                         Fn::GetAtt: 
-                            - "CIServer"
+                            - "GerritServer"
                             - "PublicIp"
