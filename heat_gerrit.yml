@@ -113,8 +113,8 @@ Resources:
                         cd /tmp
                         wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_java.sh
                         chmod u+x install_java.sh
-                        wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_common.sh
-                        chmod u+x install_common.sh
+                        wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_gerrit.sh
+                        chmod u+x install_gerrit.sh
                         
                         export PROJECT_NAME=_project_name_
                         echo $PROJECT_NAME
@@ -125,9 +125,9 @@ Resources:
                         export IP_ADDRESS=`wget -qO -  http://169.254.169.254/latest/meta-data/local-ipv4`
                         echo $IP_ADDRESS
                                                                                             
-                        ./install_common.sh
+                        ./install_gerrit.sh
                         
-                        rm install_common.sh
+                        rm install_gerrit.sh
                         rm install_java.sh
 Outputs: 
     GerritSSHAccess: 
