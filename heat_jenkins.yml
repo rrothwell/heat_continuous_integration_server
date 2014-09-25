@@ -1,0 +1,142 @@
+# ===========================================
+# Copyright NeCTAR, September 2014, all rights reserved.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License"); 
+# you may not use this file except in compliance with the License. 
+# You may obtain a copy of the License at
+# 
+# http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, 
+# software distributed under the License is distributed on an "AS IS" BASIS, 
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+# See the License for the specific language governing permissions 
+# and limitations under the License.
+# ===========================================
+# heat_jenkins.yml
+# A heat script to build a jenkins server.
+# manifest:
+# 0. Python
+# 1. Java
+# 2. Jenkins
+# ===========================================
+HeatTemplateFormatVersion: '2012-12-12'
+Description: "A Jenkins Continuous Integration Server. "
+Parameters: 
+    ProjectName: 
+        Description: "The name of the software development project. "
+        Type: "String"
+        Default: "V3_Applications"
+    JenkinsUnixAccountPassword: 
+        Description: "A password used for the Jenkins user. "
+        Type: "String"
+        Default: "fuzzyface*@9"
+    KeyName: 
+        Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance. "
+        Type: "String"
+        Default: "richardr_on_nectar"
+    InstanceType:
+        Description: "The size of the VM. "
+        Type: String
+        Default: "m1.small"
+        AllowedValues:
+            - m1.small
+            - m1.medium
+            - m1.large
+            - m1.xlarge
+            - m1.xxlarge
+    ImageId:
+        Description: "The base VM image used to build the Jenkins server. This needs to have the python tools installed."
+        Type: String
+        Default: "574e0ad4-7246-4f9e-bb13-87a941d3ddf9" # ubuntu-12.04.4
+        #AllowedValues: ["ubuntu-12.04","ubuntu-12.4"]
+    AvailabilityZone: 
+        Description: "Physical location of the Jenkins server. "
+        Type: String
+        Default: "NCI"
+        AllowedValues:
+            - NCI
+            - melbourne
+            - melbourne-np
+            - melbourne-qh2
+            - qld
+            - sa
+    UrlDomainName: # Use DynDNS or similar service to create s domain name.
+        Description: "Domain name. "
+        Type: String
+        Default: "jenkins.dontexist.com"
+#Mappings:
+#    InstanceId:
+#        'ubuntu-12.04': {ImageId: c64cacf2-c269-4a95-aae6-7f1a3913f9eb}
+Resources: 
+    # http://docs.openstack.org/developer/heat/template_guide/cfn.html#AWS::EC2::SecurityGroup
+    DefaultSecurityGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Standard firewall rules for ping, SSH and HTTP/S.
+            SecurityGroupIngress:
+                - {IpProtocol: icmp, FromPort: '-1', ToPort: '-1', CidrIp : 0.0.0.0/0}
+                - {IpProtocol: tcp, FromPort: '22', ToPort: '22', CidrIp: 0.0.0.0/0}
+                - {IpProtocol: tcp, FromPort: '80', ToPort: '80', CidrIp: 0.0.0.0/0}
+                - {IpProtocol: tcp, FromPort: '443', ToPort: '443', CidrIp: 0.0.0.0/0}
+    JenkinsSecurityGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: Jenkins firewall rules. Web and Git interfaces.
+            SecurityGroupIngress:
+                - {IpProtocol: tcp, FromPort: '8080', ToPort: '8080', CidrIp: 0.0.0.0/0}
+# http://docs.openstack.org/developer/heat/template_guide/cfn.html#AWS::EC2::Instance
+# To get the node IP address see: https://wiki.openstack.org/wiki/Heat/ApplicationDeployment
+    JenkinsServer: 
+        Type: "AWS::EC2::Instance"
+        Properties: 
+            KeyName: {Ref: KeyName}
+            #ImageId: {Fn::FindInMap: [InstanceId, {Ref: ImageName}, ImageId]}
+            ImageId:  {Ref: ImageId}
+            InstanceType: {Ref: InstanceType}
+            AvailabilityZone: {Ref: AvailabilityZone}
+            SecurityGroups: 
+                - {Ref: "DefaultSecurityGroup"}
+                - {Ref: "JenkinsSecurityGroup"}
+            UserData:
+                Fn::Base64:
+                    Fn::Replace:
+                      - _project_name_: {Ref: ProjectName}
+                        _domain_name_: {Ref: UrlDomainName}
+                        _jenkins_account_password_: {Ref: JenkinsUnixAccountPassword}
+                      - |
+                        #!/bin/bash -v
+                        apt-get -y update; apt-get -y upgrade
+
+                        updatedb
+                        cd /tmp
+                        wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_java.sh
+                        chmod u+x install_java.sh
+                        wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_jenkins.sh
+                        chmod u+x install_jenkins.sh
+                        
+                        export PROJECT_NAME=_project_name_
+                        echo $PROJECT_NAME
+                        export DOMAIN_NAME=_domain_name_
+                        echo $DOMAIN_NAME
+                        export JENKINS_ACCOUNT_PASSWORD=_jenkins_account_password_
+                        echo $JENKINS_ACCOUNT_PASSWORD
+                        export IP_ADDRESS=`wget -qO -  http://169.254.169.254/latest/meta-data/local-ipv4`
+                        echo $IP_ADDRESS
+                                                                                            
+                        ./install_jenkins.sh
+                        
+                        rm install_jenkins.sh
+                        rm install_java.sh
+Outputs: 
+    JenkinsSSHAccess: 
+        Description: "Login via ssh using this command: "
+        Value: 
+            Fn::Join: 
+                - ""
+                - 
+                    - "ssh -i /local/path/to/private/key/file.pem root@"
+                    - 
+                        Fn::GetAtt: 
+                            - "JenkinsServer"
+                            - "PublicIp"
