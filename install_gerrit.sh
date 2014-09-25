@@ -82,6 +82,7 @@ echo "Setup Gerrit for reboot. "
 # 1. Tweak gerrit.sh control script.
 # Ubuntu complains about this. Seems it has removed chkconfig,
 # See: http://askubuntu.com/questions/221293/why-is-chkconfig-no-longer-available-in-ubuntu
+apt-get install chkconfig
 sudo -u gerrit2 sed -i 's/# chkconfig: 3 99 99/chkconfig: 3 99 99/' $GERRIT_SCRIPT
 sudo -u gerrit2 sed -i 's/# description: Gerrit Code Review/description: Gerrit Code Review/' $GERRIT_SCRIPT
 sudo -u gerrit2 sed -i 's/# processname: gerrit/processname: gerrit/' $GERRIT_SCRIPT
