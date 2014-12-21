@@ -52,7 +52,7 @@ else
 	apt-get install -y openjdk-7-jdk
 
 	# Set the JAVA environment variables.
-	echo -e "\n\nJAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64" >> /etc/environment;
-	export JAVA_HOME=/usr/lib/jvm/java-6-openjdk-amd64/
+	echo -e "\n\nJAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64" >> /etc/environment;
+	export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
 fi
 

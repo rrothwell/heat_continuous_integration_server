@@ -1,13 +1,16 @@
 #!/bin/bash
 # ===========================================
-# Install Common Code for Jenkins Server
+# Install Continuous Integration Server
 #
 # Sets up:
 #	Python
 #	Java
-#	Jenkins.
+#	Jenkins
+#   Maybe Subversion
 #	DNS (DynDNS is configured manually)
 #	Email (not done yet)
+#   Configure for Django we applications
+#   Configure for Tomcat/Maven web applications
 # Resources:
 # 	https://wiki.jenkins-ci.org/display/JENKINS/Meet+Jenkins
 # 	https://wiki.jenkins-ci.org/display/JENKINS/Use+Jenkins
@@ -16,9 +19,9 @@
 # export PROJECT_NAME=JenkinsTest; export BASE_DOMAIN=V3.org;export JENKINS_ACCOUNT_PASSWORD=fuzzyface;./install_jenkins.sh
 # ===========================================
 
-# Some of these things may already be done by a driver script.
+# Log messages echoed will appear in /var/log/cloud-init.log
 
-echo "Install common code for Jenkins server. "
+echo "Continuous Integration Server. "
 
 # Preparation.
 
@@ -34,18 +37,6 @@ echo "Installing java support. "
 
 echo "Installing Jenkins. "
 
-wget -q -O - https://jenkins-ci.org/debian/jenkins-ci.org.key | sudo apt-key add -
-sudo sh -c 'echo deb http://pkg.jenkins-ci.org/debian binary/ > /etc/apt/sources.list.d/jenkins.list'
-sudo apt-get -y update
-sudo apt-get install -y jenkins
-
-echo "Configuring Jenkins. "
-
-# TODO.
-
-echo "Installation complete. "
-echo "Complete the process by logging in at http://$DOMAIN_NAME:8080/ and creating a superadmin account. "
-echo "Visit https://wiki.jenkins-ci.org/display/JENKINS/Use+Jenkins for instructions. "
-echo "Comply with the Standard Security Setup: https://wiki.jenkins-ci.org/display/JENKINS/Standard+Security+Setup"
+./install_jenkins.sh
 
 

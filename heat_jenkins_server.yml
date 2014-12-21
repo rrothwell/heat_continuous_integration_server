@@ -1,5 +1,5 @@
 # ===========================================
-# Copyright NeCTAR, September 2014, all rights reserved.
+# Copyright V3 Alliance, September 2014, all rights reserved.
 # 
 # Licensed under the Apache License, Version 2.0 (the "License"); 
 # you may not use this file except in compliance with the License. 
@@ -13,21 +13,22 @@
 # See the License for the specific language governing permissions 
 # and limitations under the License.
 # ===========================================
-# heat_gerrit.yml
-# A heat script to build a gerrit server.
+# heat_jenkins.yml
+# A heat script to build a jenkins server.
 # manifest:
 # 0. Python
-# 1. Gerrit/Git
+# 1. Java
+# 2. Jenkins
 # ===========================================
 HeatTemplateFormatVersion: '2012-12-12'
-Description: "A Gerrit Code Review Server. Includes Gerrit and Jenkins. "
+Description: "A Jenkins Continuous Integration Server. "
 Parameters: 
     ProjectName: 
         Description: "The name of the software development project. "
         Type: "String"
         Default: "V3_Applications"
-    GerritUnixAccountPassword: 
-        Description: "A password used for the Gerrit user. "
+    JenkinsUnixAccountPassword: 
+        Description: "A password used for the Jenkins user. Change this!"
         Type: "String"
         Default: "fuzzyface*@9"
     KeyName: 
@@ -45,12 +46,12 @@ Parameters:
             - m1.xlarge
             - m1.xxlarge
     ImageId:
-        Description: "The base VM image used to build the Gerrit server. This needs to have the python tools installed."
+        Description: "The base VM image used to build the Jenkins server. This needs to have the python tools installed."
         Type: String
         Default: "574e0ad4-7246-4f9e-bb13-87a941d3ddf9" # ubuntu-12.04.4
         #AllowedValues: ["ubuntu-12.04","ubuntu-12.4"]
     AvailabilityZone: 
-        Description: "Physical location of the Gerrit server. "
+        Description: "Physical location of the Jenkins server. "
         Type: String
         Default: "NCI"
         AllowedValues:
@@ -63,7 +64,7 @@ Parameters:
     UrlDomainName: # Use DynDNS or similar service to create s domain name.
         Description: "Domain name. "
         Type: String
-        Default: "gerrit.dontexist.com"
+        Default: "jenkins.dontexist.com"
 #Mappings:
 #    InstanceId:
 #        'ubuntu-12.04': {ImageId: c64cacf2-c269-4a95-aae6-7f1a3913f9eb}
@@ -78,16 +79,15 @@ Resources:
                 - {IpProtocol: tcp, FromPort: '22', ToPort: '22', CidrIp: 0.0.0.0/0}
                 - {IpProtocol: tcp, FromPort: '80', ToPort: '80', CidrIp: 0.0.0.0/0}
                 - {IpProtocol: tcp, FromPort: '443', ToPort: '443', CidrIp: 0.0.0.0/0}
-    GerritSecurityGroup:
+    JenkinsSecurityGroup:
         Type: AWS::EC2::SecurityGroup
         Properties:
-            GroupDescription: Gerrit firewall rules. Web and Git interfaces.
+            GroupDescription: Jenkins firewall rules. Web and Git interfaces.
             SecurityGroupIngress:
                 - {IpProtocol: tcp, FromPort: '8080', ToPort: '8080', CidrIp: 0.0.0.0/0}
-                - {IpProtocol: tcp, FromPort: '29418', ToPort: '29418', CidrIp: 0.0.0.0/0}                                       
 # http://docs.openstack.org/developer/heat/template_guide/cfn.html#AWS::EC2::Instance
 # To get the node IP address see: https://wiki.openstack.org/wiki/Heat/ApplicationDeployment
-    GerritServer: 
+    JenkinsServer: 
         Type: "AWS::EC2::Instance"
         Properties: 
             KeyName: {Ref: KeyName}
@@ -97,13 +97,13 @@ Resources:
             AvailabilityZone: {Ref: AvailabilityZone}
             SecurityGroups: 
                 - {Ref: "DefaultSecurityGroup"}
-                - {Ref: "GerritSecurityGroup"}
+                - {Ref: "JenkinsSecurityGroup"}
             UserData:
                 Fn::Base64:
                     Fn::Replace:
                       - _project_name_: {Ref: ProjectName}
                         _domain_name_: {Ref: UrlDomainName}
-                        _gerrit_account_password_: {Ref: GerritUnixAccountPassword}
+                        _jenkins_account_password_: {Ref: JenkinsUnixAccountPassword}
                       - |
                         #!/bin/bash -v
                         apt-get -y update; apt-get -y upgrade
@@ -112,24 +112,24 @@ Resources:
                         cd /tmp
                         wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_java.sh
                         chmod u+x install_java.sh
-                        wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_gerrit.sh
-                        chmod u+x install_gerrit.sh
+                        wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_jenkins.sh
+                        chmod u+x install_jenkins.sh
                         
                         export PROJECT_NAME=_project_name_
                         echo $PROJECT_NAME
                         export DOMAIN_NAME=_domain_name_
                         echo $DOMAIN_NAME
-                        export GERRIT_ACCOUNT_PASSWORD=_gerrit_account_password_
-                        echo $GERRIT_ACCOUNT_PASSWORD
+                        export JENKINS_ACCOUNT_PASSWORD=_jenkins_account_password_
+                        echo $JENKINS_ACCOUNT_PASSWORD
                         export IP_ADDRESS=`wget -qO -  http://169.254.169.254/latest/meta-data/local-ipv4`
                         echo $IP_ADDRESS
                                                                                             
-                        ./install_gerrit.sh
+                        ./install_jenkins.sh
                         
-                        rm install_gerrit.sh
+                        rm install_jenkins.sh
                         rm install_java.sh
 Outputs: 
-    GerritSSHAccess: 
+    JenkinsSSHAccess: 
         Description: "Login via ssh using this command: "
         Value: 
             Fn::Join: 
@@ -138,5 +138,5 @@ Outputs:
                     - "ssh -i /local/path/to/private/key/file.pem root@"
                     - 
                         Fn::GetAtt: 
-                            - "GerritServer"
+                            - "JenkinsServer"
                             - "PublicIp"

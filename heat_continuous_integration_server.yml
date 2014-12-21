@@ -1,5 +1,5 @@
 # ===========================================
-# Copyright NeCTAR, September 2014, all rights reserved.
+# Copyright V3 Alliance, September 2014, all rights reserved.
 # 
 # Licensed under the Apache License, Version 2.0 (the "License"); 
 # you may not use this file except in compliance with the License. 
@@ -21,14 +21,14 @@
 # 2. Jenkins
 # ===========================================
 HeatTemplateFormatVersion: '2012-12-12'
-Description: "A Jenkins Continuous Integration Server. "
+Description: "A Jenkins Continuous Integration Server. Includes Jenkins and maybe Subversion. "
 Parameters: 
     ProjectName: 
         Description: "The name of the software development project. "
         Type: "String"
         Default: "V3_Applications"
     JenkinsUnixAccountPassword: 
-        Description: "A password used for the Jenkins user. "
+        Description: "A password used for the Jenkins user. Change this!"
         Type: "String"
         Default: "fuzzyface*@9"
     KeyName: 
@@ -65,6 +65,13 @@ Parameters:
         Description: "Domain name. "
         Type: String
         Default: "jenkins.dontexist.com"
+    InstallSubversion: # Install a Subversion instance.
+        Description: "Flag to indicate a request to install Subversion on the Jenkins server. "
+        Type: String
+        Default: "No"
+        AllowedValues:
+            - No
+            - Yes
 #Mappings:
 #    InstanceId:
 #        'ubuntu-12.04': {ImageId: c64cacf2-c269-4a95-aae6-7f1a3913f9eb}
@@ -104,6 +111,7 @@ Resources:
                       - _project_name_: {Ref: ProjectName}
                         _domain_name_: {Ref: UrlDomainName}
                         _jenkins_account_password_: {Ref: JenkinsUnixAccountPassword}
+                        _install_svn_: {Ref: InstallSubversion}
                       - |
                         #!/bin/bash -v
                         apt-get -y update; apt-get -y upgrade
@@ -114,13 +122,17 @@ Resources:
                         chmod u+x install_java.sh
                         wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_jenkins.sh
                         chmod u+x install_jenkins.sh
+                        wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_svn.sh
+                        chmod u+x install_svn.sh
                         
                         export PROJECT_NAME=_project_name_
                         echo $PROJECT_NAME
                         export DOMAIN_NAME=_domain_name_
-                        echo $DOMAIN_NAME
+                        echo "Domain name $DOMAIN_NAME"
                         export JENKINS_ACCOUNT_PASSWORD=_jenkins_account_password_
                         echo $JENKINS_ACCOUNT_PASSWORD
+                        export INSTALL_SVN=_install_svn_
+                        echo "Install subversion $INSTALL_SVN"
                         export IP_ADDRESS=`wget -qO -  http://169.254.169.254/latest/meta-data/local-ipv4`
                         echo $IP_ADDRESS
                                                                                             
@@ -128,6 +140,7 @@ Resources:
                         
                         rm install_jenkins.sh
                         rm install_java.sh
+                        rm install_svn.sh
 Outputs: 
     JenkinsSSHAccess: 
         Description: "Login via ssh using this command: "
@@ -140,3 +153,6 @@ Outputs:
                         Fn::GetAtt: 
                             - "JenkinsServer"
                             - "PublicIp"
+    ManualConfiguration: 
+        Description: "Complete the process by logging in at http://$DOMAIN_NAME:8080/ and creating a superadmin account. 
+Comply with the Standard Security Setup: https://wiki.jenkins-ci.org/display/JENKINS/Standard+Security+Setup"
