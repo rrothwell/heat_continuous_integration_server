@@ -37,8 +37,6 @@ sudo apt-get install -y subversion
 
 # Subversion user and directory
 sudo useradd --create-home --shell /bin/bash --user-group subversion
-
-echo "subversion:$ACCOUNT_PASSWORD"
 echo "subversion:$ACCOUNT_PASSWORD" | chpasswd
 
 # Subversion group
