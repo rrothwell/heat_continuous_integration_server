@@ -79,9 +79,9 @@ sudo adduser $SVN_USERNAME subversion # Only needed if publishing the repo via H
 # Configure for custom svn protocol.
 
 # Setting it up for common authentication to all repositories.
-sed -i 's/# anon-access = read/# anon-access = none/' /usr/local/svn/V3_Application/confsvnserve.conf
-sed -i 's/# password-db = passwd/password-db = /usr/local/svn/passwd' /usr/local/svn/V3_Application/confsvnserve.conf
-sed -i 's/# realm = My First Repository/realm = Developers' /usr/local/svn/V3_Application/confsvnserve.conf
+sed -i 's%# anon-access = read%anon-access = none%' /usr/local/svn/V3_Application/conf/svnserve.conf
+sed -i 's%# password-db = passwd%password-db = /usr/local/svn/passwd%' /usr/local/svn/V3_Application/conf/svnserve.conf
+sed -i 's%# realm = My First Repository%realm = Developers%' /usr/local/svn/V3_Application/conf/svnserve.conf
 
 # Give one repo user access,. .
 echo -e "$SVN_USERNAME\tSVN_PASSWORD"  >> /usr/local/svn/passwd;
