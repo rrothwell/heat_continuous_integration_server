@@ -49,15 +49,15 @@ fi
 # Create a repository
 sudo mkdir /usr/local/svn
 cd /usr/local/svn
-sudo mkdir BirdFI
-sudo svnadmin create /usr/local/svn/BirdFI
+sudo mkdir $PROJECT_NAME
+sudo svnadmin create /usr/local/svn/$PROJECT_NAME
 
 # Adjust permissions
 cd /usr/local/svn
-sudo chown -R www-data:subversion BirdFI
-sudo chmod -R g+rws BirdFI
-sudo chown -R www-data:subversion BirdFI
-sudo chmod -R g+rws BirdFI
+sudo chown -R www-data:subversion $PROJECT_NAME
+sudo chmod -R g+rws $PROJECT_NAME
+sudo chown -R www-data:subversion $PROJECT_NAME
+sudo chmod -R g+rws $PROJECT_NAME
 
 # TODO.
 # Configure for WebDav access via HTTPS

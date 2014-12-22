@@ -126,7 +126,7 @@ Resources:
 
                         # Silence complaints
                         chmod 0440 /etc/sudoers.d/heat-instance-ec2-user
-                        echo -e "$IP_ADDRESS\t$HOSTNAME"  >> /etc/hosts;
+                        echo -e "$IP_ADDRESS\t$HOSTNAME\t$DOMAIN_NAME"  >> /etc/hosts;
                                                                                             
                         ./install_subversion.sh
                         
@@ -143,3 +143,5 @@ Outputs:
                         Fn::GetAtt: 
                             - "SubversionServer"
                             - "PublicIp"
+    DomainSetting: 
+        Description: "Register the domain name with a service such as DynDNS, before setting the domain name here. "
