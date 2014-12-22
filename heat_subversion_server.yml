@@ -13,22 +13,22 @@
 # See the License for the specific language governing permissions 
 # and limitations under the License.
 # ===========================================
-# heat_jenkins.yml
-# A heat script to build a jenkins server.
+# heat_subversion.yml
+# A heat script to build a subversion server.
 # manifest:
 # 0. Python
 # 1. Java
-# 2. Jenkins
+# 2. Subversion
 # ===========================================
 HeatTemplateFormatVersion: '2012-12-12'
-Description: "A Jenkins Continuous Integration Server. Includes Jenkins and maybe Subversion. "
+Description: "A Subversion Server. "
 Parameters: 
     ProjectName: 
         Description: "The name of the software development project. "
         Type: "String"
-        Default: "V3_Applications"
-    JenkinsUnixAccountPassword: 
-        Description: "A password used for the Jenkins user. Change this!"
+        Default: "V3_Application"
+    SubversionUnixAccountPassword: 
+        Description: "A password used for the subversion user. Change this!"
         Type: "String"
         Default: "fuzzyface*@9"
     KeyName: 
@@ -46,12 +46,12 @@ Parameters:
             - m1.xlarge
             - m1.xxlarge
     ImageId:
-        Description: "The base VM image used to build the Jenkins server. This needs to have the python tools installed."
+        Description: "The base VM image used to build the subversion server. This needs to have the python tools installed."
         Type: String
         Default: "574e0ad4-7246-4f9e-bb13-87a941d3ddf9" # ubuntu-12.04.4
-        #AllowedValues: ["ubuntu-12.04","ubuntu-12.4"]
+        AllowedValues: ["574e0ad4-7246-4f9e-bb13-87a941d3ddf9","ubuntu-12.4"]
     AvailabilityZone: 
-        Description: "Physical location of the Jenkins server. "
+        Description: "Physical location of the subversion server. "
         Type: String
         Default: "NCI"
         AllowedValues:
@@ -61,21 +61,10 @@ Parameters:
             - melbourne-qh2
             - qld
             - sa
-    UrlDomainName: # Use DynDNS or similar service to create s domain name.
-        Description: "Domain name. "
+    UrlDomainName: # Use DynDNS or similar service to create s domain name. Not yet used.
+        Description: "Domain name.  Ignore, not yet used."
         Type: String
-        Default: "jenkins.dontexist.com"
-    InstallSubversion: # Install a Subversion instance.
-        Description: "Flag to indicate a request to install Subversion on the Jenkins server. "
-        Type: String
-        Default: "No"
-        AllowedValues:
-            - No
-            - Yes
-    SubversionPassword: 
-        Description: "A password used for the Subversion user. Change this!"
-        Type: "String"
-        Default: "fuzzyface*@9"
+        Default: "subversion.dontexist.com"
 #Mappings:
 #    InstanceId:
 #        'ubuntu-12.04': {ImageId: c64cacf2-c269-4a95-aae6-7f1a3913f9eb}
@@ -90,15 +79,15 @@ Resources:
                 - {IpProtocol: tcp, FromPort: '22', ToPort: '22', CidrIp: 0.0.0.0/0}
                 - {IpProtocol: tcp, FromPort: '80', ToPort: '80', CidrIp: 0.0.0.0/0}
                 - {IpProtocol: tcp, FromPort: '443', ToPort: '443', CidrIp: 0.0.0.0/0}
-    JenkinsSecurityGroup:
+    SubversionSecurityGroup:
         Type: AWS::EC2::SecurityGroup
         Properties:
-            GroupDescription: Jenkins firewall rules. Web and Git interfaces.
+            GroupDescription: subversion firewall rules. Web and Git interfaces.
             SecurityGroupIngress:
-                - {IpProtocol: tcp, FromPort: '8080', ToPort: '8080', CidrIp: 0.0.0.0/0}
+                - {IpProtocol: tcp, FromPort: '3690', ToPort: '3690', CidrIp: 0.0.0.0/0}
 # http://docs.openstack.org/developer/heat/template_guide/cfn.html#AWS::EC2::Instance
 # To get the node IP address see: https://wiki.openstack.org/wiki/Heat/ApplicationDeployment
-    JenkinsServer: 
+    subversionServer: 
         Type: "AWS::EC2::Instance"
         Properties: 
             KeyName: {Ref: KeyName}
@@ -108,45 +97,36 @@ Resources:
             AvailabilityZone: {Ref: AvailabilityZone}
             SecurityGroups: 
                 - {Ref: "DefaultSecurityGroup"}
-                - {Ref: "JenkinsSecurityGroup"}
+                - {Ref: "SubversionSecurityGroup"}
             UserData:
                 Fn::Base64:
                     Fn::Replace:
                       - _project_name_: {Ref: ProjectName}
                         _domain_name_: {Ref: UrlDomainName}
-                        _jenkins_account_password_: {Ref: JenkinsUnixAccountPassword}
-                        _install_svn_: {Ref: InstallSubversion}
+                        _subversion_account_password_: {Ref: SubversionUnixAccountPassword}
                       - |
                         #!/bin/bash -v
                         apt-get -y update; apt-get -y upgrade
 
                         updatedb
                         cd /tmp
-                        wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_java.sh
-                        chmod u+x install_java.sh
-                        wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_jenkins.sh
-                        chmod u+x install_jenkins.sh
-                        wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_svn.sh
-                        chmod u+x install_svn.sh
+                        wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_subversion.sh
+                        chmod u+x install_subversion.sh
                         
                         export PROJECT_NAME=_project_name_
                         echo $PROJECT_NAME
                         export DOMAIN_NAME=_domain_name_
                         echo "Domain name $DOMAIN_NAME"
-                        export JENKINS_ACCOUNT_PASSWORD=_jenkins_account_password_
-                        echo $JENKINS_ACCOUNT_PASSWORD
-                        export INSTALL_SVN=_install_svn_
-                        echo "Install subversion $INSTALL_SVN"
+                        export ACCOUNT_PASSWORD=_subversion_account_password_
+                        echo $ACCOUNT_PASSWORD
                         export IP_ADDRESS=`wget -qO -  http://169.254.169.254/latest/meta-data/local-ipv4`
                         echo $IP_ADDRESS
                                                                                             
-                        ./install_jenkins.sh
+                        #./install_subversion.sh
                         
-                        rm install_jenkins.sh
-                        rm install_java.sh
-                        rm install_svn.sh
+                        #rm install_subversion.sh
 Outputs: 
-    JenkinsSSHAccess: 
+    SubversionSSHAccess: 
         Description: "Login via ssh using this command: "
         Value: 
             Fn::Join: 
@@ -155,8 +135,5 @@ Outputs:
                     - "ssh -i /local/path/to/private/key/file.pem root@"
                     - 
                         Fn::GetAtt: 
-                            - "JenkinsServer"
+                            - "SubversionServer"
                             - "PublicIp"
-    ManualConfiguration: 
-        Description: "Complete the process by logging in at http://$DOMAIN_NAME:8080/ and creating a superadmin account. 
-Comply with the Standard Security Setup: https://wiki.jenkins-ci.org/display/JENKINS/Standard+Security+Setup"
