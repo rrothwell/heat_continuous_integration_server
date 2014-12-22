@@ -37,6 +37,7 @@ echo "Installing Subversion. "
 sudo apt-get install -y subversion
 
 # Subversion user/group and directory
+echo -e "Adding the subversion application user: subversion:$ACCOUNT_PASSWORD"
 sudo useradd --create-home --shell /bin/bash --user-group subversion
 echo "subversion:$ACCOUNT_PASSWORD" | chpasswd
 
@@ -69,8 +70,9 @@ sudo chown -R www-data:subversion .
 sudo chmod -R g+rws .
 
 # Add one repo user.
+echo -e "Adding a repository user: $SVN_USERNAME\tSVN_PASSWORD"
 sudo useradd --create-home --shell /bin/bash --user-group $SVN_USERNAME
-echo "$SVN_USERNAME\tSVN_PASSWORD" | chpasswd
+echo "$SVN_USERNAME\t$SVN_PASSWORD" | chpasswd
 sudo adduser $SVN_USERNAME subversion # Only needed if publishing the repo via HTTP of HTTPS.
 
 # TODO.
@@ -79,12 +81,12 @@ sudo adduser $SVN_USERNAME subversion # Only needed if publishing the repo via H
 # Configure for custom svn protocol.
 
 # Setting it up for common authentication to all repositories.
-sed -i 's%# anon-access = read%anon-access = none%' /usr/local/svn/V3_Application/conf/svnserve.conf
-sed -i 's%# password-db = passwd%password-db = /usr/local/svn/passwd%' /usr/local/svn/V3_Application/conf/svnserve.conf
-sed -i 's%# realm = My First Repository%realm = Developers%' /usr/local/svn/V3_Application/conf/svnserve.conf
+sed -i 's%# anon-access = read%anon-access = none%' /usr/local/svn/repos/V3_Application/conf/svnserve.conf
+sed -i 's%# password-db = passwd%password-db = /usr/local/svn/passwd%' /usr/local/svn/repos/V3_Application/conf/svnserve.conf
+sed -i 's%# realm = My First Repository%realm = Developers%' /usr/local/svn/repos/V3_Application/conf/svnserve.conf
 
 # Give one repo user access,. .
-echo -e "$SVN_USERNAME\tSVN_PASSWORD"  >> /usr/local/svn/passwd;
+echo -e "$SVN_USERNAME\t$SVN_PASSWORD"  >> /usr/local/svn/passwd;
 sudo chmod 600 /usr/local/svn/passwd
 
 # TODO

@@ -137,7 +137,7 @@ Resources:
                         export SVN_USERNAME=_subversion_repo_username_
                         echo "Repository username: $SVN_USERNAME"
                         export SVN_PASSWORD="_subversion_repo_password_"
-                        echo "Repository password: $SVN_USERNAME"
+                        echo "Repository password: $SVN_PASSWORD"
 
                         # Silence complaints
                         chmod 0440 /etc/sudoers.d/heat-instance-ec2-user
