@@ -1,4 +1,4 @@
-Heat Templates for Continuous Integration on Ubuntu
+OpenStack Heat Templates for Continuous Integration on Ubuntu
 ===================================================
 
 This repository collects a number of Heat templates and bash scripts for 
@@ -12,5 +12,5 @@ So far this includes:
 3. Jenkins
 4. TODO - Gerrit
 
-This is a work in progress, so while working a number of these items
+This is a work in progress, so while working, a number of these items
 do not provide a full kit of functionality.
