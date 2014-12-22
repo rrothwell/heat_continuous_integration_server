@@ -65,6 +65,14 @@ Parameters:
         Description: "Domain name.  Ignore, not yet used."
         Type: String
         Default: "subversion.dontexist.com"
+    SubversionRepositoryUsername: 
+        Description: "A user name for access to the project repository. Change this!"
+        Type: "String"
+        Default: "jbloggs"
+    SubversionRepositoryPassword: 
+        Description: "A password for access to the project repository. Change this!"
+        Type: "String"
+        Default: "munkledust(1B"
 #Mappings:
 #    InstanceId:
 #        'ubuntu-12.04': {ImageId: c64cacf2-c269-4a95-aae6-7f1a3913f9eb}
@@ -104,6 +112,8 @@ Resources:
                       - _project_name_: {Ref: ProjectName}
                         _domain_name_: {Ref: UrlDomainName}
                         _subversion_account_password_: {Ref: SubversionUnixAccountPassword}
+                        _subversion_repo_username_: {Ref: SubversionRepositoryUsername}
+                        _subversion_repo_password_: {Ref: SubversionRepositoryPassword}
                       - |
                         #!/bin/bash -v
                         apt-get -y update; apt-get -y upgrade
@@ -123,6 +133,11 @@ Resources:
                         echo "IP address: $IP_ADDRESS"
                         export HOSTNAME=`hostname`
                         echo "Hostname: $HOSTNAME"
+                        
+                        export SVN_USERNAME=_subversion_repo_username_
+                        echo "Repository username: $SVN_USERNAME"
+                        export SVN_PASSWORD=_subversion_repo_password_
+                        echo "Repository password: $SVN_USERNAME"
 
                         # Silence complaints
                         chmod 0440 /etc/sudoers.d/heat-instance-ec2-user
