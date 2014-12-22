@@ -25,6 +25,10 @@ echo "Continuous Integration Server. "
 
 # Preparation.
 
+# Silence complaints
+chmod 0440 /etc/sudoers.d/heat-instance-ec2-user
+echo -e `hostname`  >> /etc/hosts;
+
 echo "Installing python support. "
 apt-get -y install python-software-properties python-setuptools 
 

@@ -34,7 +34,7 @@ Parameters:
     KeyName: 
         Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance. "
         Type: "String"
-        Default: "richardr_on_nectar"
+        Default: "richard_on_nectar_v3"
     InstanceType:
         Description: "The size of the VM. "
         Type: String
@@ -87,7 +87,7 @@ Resources:
                 - {IpProtocol: tcp, FromPort: '3690', ToPort: '3690', CidrIp: 0.0.0.0/0}
 # http://docs.openstack.org/developer/heat/template_guide/cfn.html#AWS::EC2::Instance
 # To get the node IP address see: https://wiki.openstack.org/wiki/Heat/ApplicationDeployment
-    subversionServer: 
+    SubversionServer: 
         Type: "AWS::EC2::Instance"
         Properties: 
             KeyName: {Ref: KeyName}
