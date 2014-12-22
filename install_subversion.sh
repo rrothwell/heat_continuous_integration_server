@@ -70,9 +70,9 @@ sudo chown -R www-data:subversion .
 sudo chmod -R g+rws .
 
 # Add one repo user.
-echo -e "Adding a repository user: $SVN_USERNAME\tSVN_PASSWORD"
+echo -e "Adding a repository user: $SVN_USERNAME\t$SVN_PASSWORD"
 sudo useradd --create-home --shell /bin/bash --user-group $SVN_USERNAME
-echo "$SVN_USERNAME\t$SVN_PASSWORD" | chpasswd
+echo "$SVN_USERNAME:$SVN_PASSWORD" | chpasswd
 sudo adduser $SVN_USERNAME subversion # Only needed if publishing the repo via HTTP of HTTPS.
 
 # TODO.
