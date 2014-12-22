@@ -19,7 +19,7 @@
 # export PROJECT_NAME=JenkinsTest; export BASE_DOMAIN=V3.org;export JENKINS_ACCOUNT_PASSWORD=fuzzyface;./install_jenkins.sh
 # ===========================================
 
-# Log messages echoed will appear in /var/log/cloud-init.log
+# Log messages echoed will appear in /var/log/cloud-init-output.log
 
 echo "Continuous Integration Server. "
 

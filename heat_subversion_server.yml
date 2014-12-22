@@ -116,15 +116,17 @@ Resources:
                         export PROJECT_NAME=_project_name_
                         echo "Project name: $PROJECT_NAME"
                         export DOMAIN_NAME=_domain_name_
-                        echo "Domain name $DOMAIN_NAME"
+                        echo "Domain name: $DOMAIN_NAME"
                         export ACCOUNT_PASSWORD=_subversion_account_password_
-                        echo $ACCOUNT_PASSWORD
+                        echo "SVN passord: $ACCOUNT_PASSWORD"
                         export IP_ADDRESS=`wget -qO -  http://169.254.169.254/latest/meta-data/local-ipv4`
-                        echo "IP address $IP_ADDRESS"
+                        echo "IP address: $IP_ADDRESS"
+                        export HOSTNAME=`hostname`
+                        echo "Hostname: $HOSTNAME"
 
                         # Silence complaints
                         chmod 0440 /etc/sudoers.d/heat-instance-ec2-user
-                        echo -e `hostname`  >> /etc/hosts;
+                        echo -e "$IP_ADDRESS\t$HOSTNAME"  >> /etc/hosts;
                                                                                             
                         ./install_subversion.sh
                         
