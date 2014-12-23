@@ -36,8 +36,8 @@ echo "Installing latest Subversion 1.7. "
 
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key A2F4C039
 sudo apt-add-repository -y ppa:svn/ppa
-sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get  -y update
+sudo apt-get  -y upgrade
 
 # Needed if upgrading Subversion.
 #sudo apt-get dist-upgrade
@@ -72,7 +72,9 @@ umask 022
 
 # Activate allow everything pre-revprop-change hook.
 # Not recommended in general but we need it to get "svnrdump load" to work.
-echo -e "exit 0"  >> /usr/local/svn/repos/$PROJECT_NAME/hooks/pre-revprop-change;
+echo -e "#!/bin/sh\nexit 0\n"  >> /usr/local/svn/repos/$PROJECT_NAME/hooks/pre-revprop-change;
+sudo chmod u+x /usr/local/svn/repos/$PROJECT_NAME/hooks/pre-revprop-change
+
 
 # Adjust permissions twice.
 # www-data is there for when we setup WebDAV.
