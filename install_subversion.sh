@@ -34,6 +34,15 @@ apt-get -y install python-software-properties python-setuptools
 
 echo "Installing Subversion. "
 
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key A2F4C039
+sudo apt-add-repository ppa:svn/ppa
+sudo apt-get update
+sudo apt-get upgrade
+
+# Needed if upgrading Subversion.
+sudo apt-get dist-upgrade
+
+# Only needed if not already installed.
 sudo apt-get install -y subversion
 
 # Subversion user/group and directory
@@ -61,6 +70,10 @@ umask 002
 sudo svnadmin create /usr/local/svn/repos/$PROJECT_NAME
 umask 022
 
+# Activate allow everything pre-revprop-change hook.
+# Not recommended in general but we need it to get "svnrdump load" to work.
+echo -e "exit 0"  >> /usr/local/svn/repos/$PROJECT_NAME/hooks/pre-revprop-change;
+
 # Adjust permissions twice.
 # www-data is there for when we setup WebDAV.
 cd /usr/local/svn/repos
@@ -81,9 +94,9 @@ sudo adduser $SVN_USERNAME subversion # Only needed if publishing the repo via H
 # Configure for custom svn protocol.
 
 # Setting it up for common authentication to all repositories.
-sed -i 's%# anon-access = read%anon-access = none%' /usr/local/svn/repos/V3_Application/conf/svnserve.conf
-sed -i 's%# password-db = passwd%password-db = /usr/local/svn/passwd%' /usr/local/svn/repos/V3_Application/conf/svnserve.conf
-sed -i 's%# realm = My First Repository%realm = Developers%' /usr/local/svn/repos/V3_Application/conf/svnserve.conf
+sed -i 's%# anon-access = read%anon-access = none%' /usr/local/svn/repos/$PROJECT_NAME/conf/svnserve.conf
+sed -i 's%# password-db = passwd%password-db = /usr/local/svn/passwd%' /usr/local/svn/repos/$PROJECT_NAME/conf/svnserve.conf
+sed -i 's%# realm = My First Repository%realm = Developers%' /usr/local/svn/repos/$PROJECT_NAME/conf/svnserve.conf
 
 # Give one repo user access.
 # Plain text passwords so we need something better: SASL or SSH tunnelling.
@@ -91,15 +104,18 @@ echo -e "[users]"  >> /usr/local/svn/passwd;
 echo -e "$SVN_USERNAME = $SVN_PASSWORD"  >> /usr/local/svn/passwd;
 sudo chmod 600 /usr/local/svn/passwd
 
+
 # TODO
 # Configure for custom svn protocol with SSL encryption.
 
 # TODO
 # svnserve init script.
 
+svnserve -d -r /usr/local/svn/repos --log-file /var/log/svn.log &
+
 # Advise manual execution.
 echo -e "Run this command after SSH-ing into the server.";
-echo -e "svnserve -d -r /usr/local/svn/repos --log-file /var/log/svn.log"
+echo -e "svnserve -d -r /usr/local/svn/repos --log-file /var/log/svn.log &"
 echo -e "Set auth-access = none once the need for the svn protocol connection is not needed."
 
 echo "Subversion installation complete. "
