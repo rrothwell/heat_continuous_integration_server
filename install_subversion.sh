@@ -100,7 +100,7 @@ sudo chmod 600 /usr/local/svn/passwd
 # Advise manual execution.
 echo -e "Run this command after SSH-ing into the server.";
 echo -e "svnserve -d -r /usr/local/svn/repos --log-file /var/log/svn.log"
-echo -e "Set auth-access = none once the need for the svn protocol connection is not needed.
+echo -e "Set auth-access = none once the need for the svn protocol connection is not needed."
 
 echo "Subversion installation complete. "
 
