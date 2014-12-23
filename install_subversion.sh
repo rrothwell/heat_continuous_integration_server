@@ -32,15 +32,15 @@ apt-get -y install python-software-properties python-setuptools
 
 # Download and install Subversion
 
-echo "Installing Subversion. "
+echo "Installing latest Subversion 1.7. "
 
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key A2F4C039
-sudo apt-add-repository ppa:svn/ppa
+sudo apt-add-repository -y ppa:svn/ppa
 sudo apt-get update
 sudo apt-get upgrade
 
 # Needed if upgrading Subversion.
-sudo apt-get dist-upgrade
+#sudo apt-get dist-upgrade
 
 # Only needed if not already installed.
 sudo apt-get install -y subversion

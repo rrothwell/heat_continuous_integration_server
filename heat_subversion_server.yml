@@ -26,7 +26,7 @@ Parameters:
     ProjectName: 
         Description: "The name of the software development project. "
         Type: "String"
-        Default: "V3_Application"
+        Default: "BirdFI"
     SubversionUnixAccountPassword: 
         Description: "A password used for the subversion user. Change this!"
         Type: "String"
