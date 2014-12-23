@@ -85,12 +85,22 @@ sed -i 's%# anon-access = read%anon-access = none%' /usr/local/svn/repos/V3_Appl
 sed -i 's%# password-db = passwd%password-db = /usr/local/svn/passwd%' /usr/local/svn/repos/V3_Application/conf/svnserve.conf
 sed -i 's%# realm = My First Repository%realm = Developers%' /usr/local/svn/repos/V3_Application/conf/svnserve.conf
 
-# Give one repo user access,. .
-echo -e "$SVN_USERNAME\t$SVN_PASSWORD"  >> /usr/local/svn/passwd;
+# Give one repo user access.
+# Plain text passwords so we need something better: SASL or SSH tunnelling.
+echo -e "[users]"  >> /usr/local/svn/passwd;
+echo -e "$SVN_USERNAME = $SVN_PASSWORD"  >> /usr/local/svn/passwd;
 sudo chmod 600 /usr/local/svn/passwd
 
 # TODO
 # Configure for custom svn protocol with SSL encryption.
+
+# TODO
+# svnserve init script.
+
+# Advise manual execution.
+echo -e "Run this command after SSH-ing into the server.";
+echo -e "svnserve -d -r /usr/local/svn/repos --log-file /var/log/svn.log"
+echo -e "Set auth-access = none once the need for the svn protocol connection is not needed.
 
 echo "Subversion installation complete. "
 
