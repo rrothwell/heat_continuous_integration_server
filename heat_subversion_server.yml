@@ -27,10 +27,6 @@ Parameters:
         Description: "The name of the software development project. "
         Type: "String"
         Default: "BirdFI"
-    SubversionUnixAccountPassword: 
-        Description: "A password used for the subversion user. Change this!"
-        Type: "String"
-        Default: "fuzzyface*@9"
     KeyName: 
         Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance. "
         Type: "String"
@@ -51,7 +47,7 @@ Parameters:
         Default: "574e0ad4-7246-4f9e-bb13-87a941d3ddf9" # ubuntu-12.04.4
         AllowedValues: ["574e0ad4-7246-4f9e-bb13-87a941d3ddf9","ubuntu-12.4"]
     AvailabilityZone: 
-        Description: "Physical location of the subversion server. "
+        Description: "Physical location of the Subversion server. "
         Type: String
         Default: "NCI"
         AllowedValues:
@@ -65,6 +61,10 @@ Parameters:
         Description: "Domain name.  Ignore, not yet used."
         Type: String
         Default: "subversion.dontexist.com"
+    SubversionUnixAccountPassword: 
+        Description: "A password used for the subversion user. Change this!"
+        Type: "String"
+        Default: "fuzzyface*@9"
     SubversionRepositoryUsername: 
         Description: "A user name for access to the project repository. Change this!"
         Type: "String"
@@ -127,13 +127,13 @@ Resources:
                         echo "Project name: $PROJECT_NAME"
                         export DOMAIN_NAME=_domain_name_
                         echo "Domain name: $DOMAIN_NAME"
-                        export ACCOUNT_PASSWORD="_subversion_account_password_"
-                        echo "SVN passord: $ACCOUNT_PASSWORD"
                         export IP_ADDRESS=`wget -qO -  http://169.254.169.254/latest/meta-data/local-ipv4`
                         echo "IP address: $IP_ADDRESS"
                         export HOSTNAME=`hostname`
                         echo "Hostname: $HOSTNAME"
                         
+                        export ACCOUNT_PASSWORD="_subversion_account_password_"
+                        echo "SVN passord: $ACCOUNT_PASSWORD"
                         export SVN_USERNAME=_subversion_repo_username_
                         echo "Repository username: $SVN_USERNAME"
                         export SVN_PASSWORD="_subversion_repo_password_"

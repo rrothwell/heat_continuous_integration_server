@@ -46,9 +46,9 @@ sudo apt-get  -y upgrade
 sudo apt-get install -y subversion
 
 # Subversion user/group and directory
-echo -e "Adding the subversion application user: subversion:$ACCOUNT_PASSWORD"
+echo -e "Adding the subversion application user: subversion:$SVN_ACCOUNT_PASSWORD"
 sudo useradd --create-home --shell /bin/bash --user-group subversion
-echo "subversion:$ACCOUNT_PASSWORD" | chpasswd
+echo "subversion:$SVN_ACCOUNT_PASSWORD" | chpasswd
 
 # Subversion group
 sudo adduser www-data subversion # Only needed if publishing the repo via HTTP of HTTPS.
