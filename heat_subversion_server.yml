@@ -132,7 +132,7 @@ Resources:
                         export HOSTNAME=`hostname`
                         echo "Hostname: $HOSTNAME"
                         
-                        export ACCOUNT_PASSWORD="_subversion_account_password_"
+                        export SVN_ACCOUNT_PASSWORD="_subversion_account_password_"
                         echo "SVN passord: $ACCOUNT_PASSWORD"
                         export SVN_USERNAME=_subversion_repo_username_
                         echo "Repository username: $SVN_USERNAME"
