@@ -151,6 +151,8 @@ Resources:
                         chmod u+x install_jenkins.sh
                         wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_subversion.sh
                         chmod u+x install_subversion.sh
+                        wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_continuous_integration_server.sh
+                        chmod u+x install_continuous_integration_server.sh
                         
                         export PROJECT_NAME=_project_name_
                         echo "Project name: $PROJECT_NAME"
@@ -174,15 +176,11 @@ Resources:
                         export SVN_PASSWORD="_subversion_repo_password_"
                         echo "Repository password: $SVN_PASSWORD"
 
-                        # Silence complaints
-                        chmod 0440 /etc/sudoers.d/heat-instance-ec2-user
-                        echo -e "$IP_ADDRESS\t$HOSTNAME\t$DOMAIN_NAME"  >> /etc/hosts;
-                                                                                            
-                        ./install_jenkins.sh
-                        if [ $INSTALL_SVN = "Yes" ]; then
-                            ./install_subversion.sh 
-                        fi
+                        # Download and install CI Server components
                         
+                        ./install_continuous_integration_server.sh
+                        
+                        rm install_continuous_integration_server.sh
                         rm install_jenkins.sh
                         rm install_java.sh
                         rm install_subversion.sh

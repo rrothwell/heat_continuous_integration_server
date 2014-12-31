@@ -26,6 +26,8 @@
 #	https://www.digitalocean.com/community/tutorials/how-to-install-java-on-ubuntu-with-apt-get
 # ===========================================
 
+echo "Installing Java: Begin! "
+
 JDK=
 #JDK=Oracle
 
@@ -55,4 +57,6 @@ else
 	echo -e "\n\nJAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64" >> /etc/environment;
 	export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/
 fi
+
+echo "Installing Java: End! "
 

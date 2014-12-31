@@ -32,7 +32,7 @@ apt-get -y install python-software-properties python-setuptools
 
 # Download and install Subversion
 
-echo "Installing latest Subversion 1.7. "
+echo "Installing latest Subversion 1.7: Begin! "
 
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key A2F4C039
 sudo apt-add-repository -y ppa:svn/ppa
@@ -120,6 +120,6 @@ echo -e "Run this command after SSH-ing into the server.";
 echo -e "svnserve -d -r /usr/local/svn/repos --log-file /var/log/svn.log &"
 echo -e "Set auth-access = none once the need for the svn protocol connection is not needed."
 
-echo "Subversion installation complete. "
+echo "Installing latest Subversion 1.7: End! "
 
 

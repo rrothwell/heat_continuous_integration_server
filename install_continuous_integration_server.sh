@@ -21,26 +21,30 @@
 
 # Log messages echoed will appear in /var/log/cloud-init-output.log
 
-echo "Continuous Integration Server. "
+echo "Install Continuous Integration Server: Begin! "
 
 # Preparation.
 
 # Silence complaints
 chmod 0440 /etc/sudoers.d/heat-instance-ec2-user
-echo -e `hostname`  >> /etc/hosts;
+echo -e "$IP_ADDRESS\t$HOSTNAME\t$DOMAIN_NAME"  >> /etc/hosts;
 
 echo "Installing python support. "
 apt-get -y install python-software-properties python-setuptools 
 
 # Download and install Java.
-echo "Installing java support. "
 
 ./install_java.sh
 
 # Download and install Jenkins
-
-echo "Installing Jenkins. "
-
+																	
 ./install_jenkins.sh
+if [ $INSTALL_SVN = "Yes" ]; then
 
+    # Download and install Subversion
+	./install_subversion.sh
+	
+fi
+
+echo "Install Continuous Integration Server: End! "
 
