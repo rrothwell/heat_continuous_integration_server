@@ -71,8 +71,8 @@ Parameters:
         Type: String
         Default: "No"
         AllowedValues:
-            - No
-            - Yes
+            - "No"
+            - "Yes"
     SubversionPassword: 
         Description: "A password used for the Subversion user. Change this!"
         Type: "String"
@@ -112,7 +112,7 @@ Resources:
     SubversionSecurityGroup:
         Type: AWS::EC2::SecurityGroup
         Properties:
-            GroupDescription: subversion firewall rules. Web and Git interfaces.
+            GroupDescription: Subversion firewall rules. Custom svn protocol.
             SecurityGroupIngress:
                 - {IpProtocol: tcp, FromPort: '3690', ToPort: '3690', CidrIp: 0.0.0.0/0}
 # http://docs.openstack.org/developer/heat/template_guide/cfn.html#AWS::EC2::Instance
@@ -167,7 +167,7 @@ Resources:
                         echo "Jenkins account password: $JENKINS_ACCOUNT_PASSWORD"
                         
                         export INSTALL_SVN=_install_svn_
-                        echo "Install subversion $INSTALL_SVN"
+                        echo "Install subversion: $INSTALL_SVN"
 
                         export SVN_ACCOUNT_PASSWORD="_subversion_account_password_"
                         echo "SVN passord: $ACCOUNT_PASSWORD"

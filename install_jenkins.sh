@@ -42,6 +42,8 @@ sudo apt-get install -y jenkins
 echo "Configuring Jenkins. "
 
 # TODO.
+#wget --no-cache -O /var/lib/jenkins/config.xml https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/jenkins_config.xml
+#service jenkins restart
 
 echo "Installation complete. "
 echo "Complete the process by logging in at http://$DOMAIN_NAME:8080/ and creating a superadmin account. "
