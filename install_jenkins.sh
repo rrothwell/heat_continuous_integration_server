@@ -12,6 +12,7 @@
 # 	https://wiki.jenkins-ci.org/display/JENKINS/Meet+Jenkins
 # 	https://wiki.jenkins-ci.org/display/JENKINS/Use+Jenkins
 # 	https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu
+#   https://www.okta.com/blog/2012/04/simple-jenkins-configuration-and-deployment/#
 # To run script standalone:
 # export PROJECT_NAME=JenkinsTest; export BASE_DOMAIN=V3.org;export JENKINS_ACCOUNT_PASSWORD=fuzzyface;./install_jenkins.sh
 # ===========================================
@@ -41,12 +42,11 @@ sudo apt-get install -y jenkins
 
 echo "Configuring Jenkins. "
 
-# TODO.
-#wget --no-cache -O /var/lib/jenkins/config.xml https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/jenkins_config.xml
-#service jenkins restart
+wget --no-cache -O /var/lib/jenkins/config.xml https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/jenkins_config.xml
+service jenkins restart
 
 echo "Installation complete. "
-echo "Complete the process by logging in at http://$DOMAIN_NAME:8080/ and creating a superadmin account. "
+echo "Complete the process by navigating to: http://$DOMAIN_NAME:8080/login?from=%2Fmanage and create an admin account with user name 'jenkins-admin.' "
 echo "Visit https://wiki.jenkins-ci.org/display/JENKINS/Use+Jenkins for instructions. "
 echo "Comply with the Standard Security Setup: https://wiki.jenkins-ci.org/display/JENKINS/Standard+Security+Setup"
 
