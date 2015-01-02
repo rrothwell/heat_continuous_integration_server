@@ -41,9 +41,13 @@ apt-get -y install python-software-properties python-setuptools
 ./install_jenkins.sh
 if [ $INSTALL_SVN = "Yes" ]; then
 
-    # Download and install Subversion
-	./install_subversion.sh
-	
+    # Download and run script to install Subversion
+	./install_subversion.sh	
+fi
+if [ $INSTALL_DJANGO = "Yes" ]; then
+
+    # Download and run script to install DJango build support
+	./install_django.sh	
 fi
 
 echo "Install Continuous Integration Server: End! "

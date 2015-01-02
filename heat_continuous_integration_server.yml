@@ -27,7 +27,7 @@ Parameters:
     ProjectName: 
         Description: "The name of the software development project. "
         Type: "String"
-        Default: "V3_Applications"
+        Default: "BirdFI"
     KeyName: 
         Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance. "
         Type: "String"
@@ -89,6 +89,13 @@ Parameters:
         Description: "A password for access to the project repository. Change this!"
         Type: "String"
         Default: "munkledust(1B"
+    InstallDjangoProject: # Install a Django project.
+        Description: "Flag to indicate a request to install Django/Python support on the Jenkins server. "
+        Type: String
+        Default: "Yes"
+        AllowedValues:
+            - "No"
+            - "Yes"
 #Mappings:
 #    InstanceId:
 #        'ubuntu-12.04': {ImageId: c64cacf2-c269-4a95-aae6-7f1a3913f9eb}
@@ -115,6 +122,12 @@ Resources:
             GroupDescription: Subversion firewall rules. Custom svn protocol.
             SecurityGroupIngress:
                 - {IpProtocol: tcp, FromPort: '3690', ToPort: '3690', CidrIp: 0.0.0.0/0}
+    DjangoTestSecurityGroup:
+        Type: AWS::EC2::SecurityGroup
+        Properties:
+            GroupDescription: WSGI Server firewall rules.
+            SecurityGroupIngress:
+                - {IpProtocol: tcp, FromPort: '8000', ToPort: '8000', CidrIp: 0.0.0.0/0}
 # http://docs.openstack.org/developer/heat/template_guide/cfn.html#AWS::EC2::Instance
 # To get the node IP address see: https://wiki.openstack.org/wiki/Heat/ApplicationDeployment
     JenkinsServer: 
@@ -139,6 +152,7 @@ Resources:
                         _subversion_account_password_: {Ref: SubversionUnixAccountPassword}
                         _subversion_repo_username_: {Ref: SubversionRepositoryUsername}
                         _subversion_repo_password_: {Ref: SubversionRepositoryPassword}
+                        _install_django_: {Ref: InstallDjangoProject}
                       - |
                         #!/bin/bash -v
                         apt-get -y update; apt-get -y upgrade
@@ -153,6 +167,8 @@ Resources:
                         chmod u+x install_subversion.sh
                         wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_continuous_integration_server.sh
                         chmod u+x install_continuous_integration_server.sh
+                        wget --no-cache https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/install_django_ci.sh
+                        chmod u+x install_django_ci.sh
                         
                         export PROJECT_NAME=_project_name_
                         echo "Project name: $PROJECT_NAME"
@@ -175,6 +191,9 @@ Resources:
                         echo "Repository username: $SVN_USERNAME"
                         export SVN_PASSWORD="_subversion_repo_password_"
                         echo "Repository password: $SVN_PASSWORD"
+
+                        export INSTALL_DJANGO="_install_django_"
+                        echo "Install Django build support: $INSTALL_DJANGO"
 
                         # Download and install CI Server components
                         

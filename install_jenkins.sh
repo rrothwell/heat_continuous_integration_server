@@ -43,6 +43,7 @@ sudo apt-get install -y jenkins
 echo "Configuring Jenkins. "
 
 wget --no-cache -O /var/lib/jenkins/config.xml https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/jenkins_config.xml
+chown jenkins:jenkins /var/lib/jenkins/config.xml
 service jenkins restart
 
 echo "Installation complete. "
