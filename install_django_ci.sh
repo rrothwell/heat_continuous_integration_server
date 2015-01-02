@@ -12,12 +12,15 @@
 # To run script standalone:
 # ===========================================
 
-# Deployment directory for Jenkin's use.
-# virtualenv is located here.
-
+# Install virtual environment for Jenkins build process.
 apt-get install -y python-virtualenv
 apt-get install -y gettext
 
+# Install Numpy and dependencies
+sudo apt-get install -y python-numpy python-scipy cython
+
+# Deployment directory for Jenkin's use.
+# virtualenv is located here.
 #mkdir -p /usr/local/django/$PROJECT_NAME_virtenv
 #chown jenkins /usr/local/django/$PROJECT_NAME_virtenv
 
@@ -36,6 +39,10 @@ apt-get install -y gettext
 
 # For a local SVN Server create a repository at 
 # /usr/local/svn/repos/BirdFI/
+
+# Add creditials to ~/.ssh/config like:
+#Host 130.56.248.66
+#        IdentityFile ~/.ssh/richard_on_nectar_v3.pem
 
 # Then populate the local SVN repo on the CI server using this command:
 # svnrdump load  --username jbloggs  svn://130.56.248.66/BirdFI <  bird_fi_dump
