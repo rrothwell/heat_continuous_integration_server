@@ -47,7 +47,7 @@ fi
 if [ $INSTALL_DJANGO = "Yes" ]; then
 
     # Download and run script to install DJango build support
-	./install_django.sh	
+	./install_django_ci.sh	
 fi
 
 echo "Install Continuous Integration Server: End! "

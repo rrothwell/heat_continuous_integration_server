@@ -142,6 +142,7 @@ Resources:
                 - {Ref: "DefaultSecurityGroup"}
                 - {Ref: "JenkinsSecurityGroup"}
                 - {Ref: "SubversionSecurityGroup"}
+                - {Ref: "DjangoTestSecurityGroup"}
             UserData:
                 Fn::Base64:
                     Fn::Replace:
