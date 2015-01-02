@@ -34,7 +34,7 @@ sudo apt-get install -y python-numpy python-scipy cython
 ##popd
 ##python $WORKSPACE/webapp/BirdFI/manage.py collectstatic --noinput
 ##sudo apachectl graceful
-#daemon --name=django_server python $WORKSPACE/webapp/BirdFI/manage.py runserver
+#daemon --name=django_server python $WORKSPACE/webapp/BirdFI/manage.py runserver 0.0.0.0:8000
 #python $WORKSPACE/webapp/BirdFI/manage.py test --noinput
 
 # For a local SVN Server create a repository at 
