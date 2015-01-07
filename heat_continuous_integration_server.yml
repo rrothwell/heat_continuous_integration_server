@@ -73,14 +73,22 @@ Parameters:
         AllowedValues:
             - "No"
             - "Yes"
-    SubversionPassword: 
-        Description: "A password used for the Subversion user. Change this!"
-        Type: "String"
-        Default: "fuzzyface*@9"
     SubversionUnixAccountPassword: 
         Description: "A password used for the subversion user. Change this!"
         Type: "String"
         Default: "fuzzyface*@9"
+    SubversionRepositoryURL:
+        Description: "The URL to access the project repository. Change this!"
+        Type: "String"
+        Default: "https://svn.vpac.org/BirdFI/trunk/BirdFI"
+    SubversionProject:
+        Description: "The project name in the repository. Change this!"
+        Type: "String"
+        Default: "BirdFI"
+    SubversionRepositoryRealm:
+        Description: "The realm Jenkins uses to organise the credentials for the repository. Change this!"
+        Type: "String"
+        Default: "https://svn.vpac.org:443"
     SubversionRepositoryUsername: 
         Description: "A user name for access to the project repository. Change this!"
         Type: "String"
@@ -96,6 +104,11 @@ Parameters:
         AllowedValues:
             - "No"
             - "Yes"
+    DjangoAppName:
+        Description: "Django/Python primary application name. I.e. where the settings.py file is located."
+        Type: String
+        Default: "BirdFI"
+    
 #Mappings:
 #    InstanceId:
 #        'ubuntu-12.04': {ImageId: c64cacf2-c269-4a95-aae6-7f1a3913f9eb}
@@ -151,9 +164,14 @@ Resources:
                         _jenkins_account_password_: {Ref: JenkinsUnixAccountPassword}
                         _install_svn_: {Ref: InstallSubversion}
                         _subversion_account_password_: {Ref: SubversionUnixAccountPassword}
+                        _subversion_repo_url_: {Ref: SubversionRepositoryURL}
+                        _subversion_project_: {Ref: SubversionProject}
+                        _subversion_repo_realm_: {Ref: SubversionRepositoryRealm}
                         _subversion_repo_username_: {Ref: SubversionRepositoryUsername}
                         _subversion_repo_password_: {Ref: SubversionRepositoryPassword}
                         _install_django_: {Ref: InstallDjangoProject}
+                        _django_app_name_: {Ref: DjangoAppName}
+                        
                       - |
                         #!/bin/bash -v
                         apt-get -y update; apt-get -y upgrade
@@ -187,14 +205,34 @@ Resources:
                         echo "Install subversion: $INSTALL_SVN"
 
                         export SVN_ACCOUNT_PASSWORD="_subversion_account_password_"
-                        echo "SVN passord: $ACCOUNT_PASSWORD"
+                        echo "SVN passord: $SVN_ACCOUNT_PASSWORD"
+                        
+                        # Repository location and structure
+                        
+                        # E.g. https://svn.vpac.org/BirdFI/trunk/BirdFI
+                        export SVN_REPO_URL=_subversion_repo_url_
+                        echo "Repository URL: $SVN_REPO_URL"                        
+                        # E.g. BirdFI
+                        export SVN_PROJECT=_subversion_project_
+                        echo "Repository project name: $SVN_REPO_URL"                        
+                        
+                        # Repository access by Jenkins
+                        
+                        # E.g. https://svn.vpac.org:443
+                        export SVN_REALM=_subversion_repo_realm_
+                        echo "Repository Jenkins realm: $SVN_REALM"
+                        # E.g. jenkins
                         export SVN_USERNAME=_subversion_repo_username_
                         echo "Repository username: $SVN_USERNAME"
+                        # E.g. bandersnatch#4t
                         export SVN_PASSWORD="_subversion_repo_password_"
                         echo "Repository password: $SVN_PASSWORD"
 
                         export INSTALL_DJANGO="_install_django_"
                         echo "Install Django build support: $INSTALL_DJANGO"
+                        # E.g. BirdFI
+                        export DJANGO_APP=_django_app_name_
+                        echo "Django principal app name: $DJANGO_APP"
 
                         # Download and install CI Server components
                         

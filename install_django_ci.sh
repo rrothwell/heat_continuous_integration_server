@@ -19,32 +19,49 @@ apt-get install -y gettext
 # Install Numpy and dependencies
 sudo apt-get install -y python-numpy python-scipy cython
 
-# Deployment directory for Jenkin's use.
-# virtualenv is located here.
-#mkdir -p /usr/local/django/$PROJECT_NAME_virtenv
-#chown jenkins /usr/local/django/$PROJECT_NAME_virtenv
+echo "Configuring Django. "
 
-##!/bin/bash
-#virtualenv $WORKSPACE
-#source $WORKSPACE/bin/activate
-#pip install -r $WORKSPACE/webapp/BirdFI/REQUIREMENTS.txt           
-#python $WORKSPACE/webapp/BirdFI/manage.py migrate 
-##pushd $WORKSPACE/webapp/BirdFI/BirdFI/
-##python $WORKSPACE/webapp/BirdFI/manage.py compilemessages
-##popd
-##python $WORKSPACE/webapp/BirdFI/manage.py collectstatic --noinput
-##sudo apachectl graceful
-#daemon --name=django_server python $WORKSPACE/webapp/BirdFI/manage.py runserver 0.0.0.0:8000
-#python $WORKSPACE/webapp/BirdFI/manage.py test --noinput
+mkdir -p /var/lib/jenkins/jobs/$PROJECT_NAME
 
-# For a local SVN Server create a repository at 
-# /usr/local/svn/repos/BirdFI/
+####### Project configuration file
 
-# Add creditials to ~/.ssh/config like:
-#Host 130.56.248.66
-#        IdentityFile ~/.ssh/richard_on_nectar_v3.pem
+wget --no-cache -O /var/lib/jenkins/jobs/django_config.xml https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/django_config.xml
+chown jenkins:jenkins /var/lib/jenkins/jobs/django_config.xml
 
-# Then populate the local SVN repo on the CI server using this command:
-# svnrdump load  --username jbloggs  svn://130.56.248.66/BirdFI <  bird_fi_dump
+#PROJECT_NAME=VU_Bird_Flight; cp /var/lib/jenkins/jobs/django_config.xml /var/lib/jenkins/jobs/$PROJECT_NAME/config.xml
+cp /var/lib/jenkins/jobs/django_config.xml /var/lib/jenkins/jobs/$PROJECT_NAME/config.xml
 
-# Otherwise target the official project repo.
+# PROJECT_NAME=VU_Bird_Flight; SVN_REPO_URL=https://svn.vpac.org/BirdFI/trunk/BirdFI; sed -i 's%${repourl}%'"$SVN_REPO_URL%" /var/lib/jenkins/jobs/$PROJECT_NAME/config.xml
+sed -i 's%${repourl}%'"$SVN_REPO_URL%" /var/lib/jenkins/jobs/$PROJECT_NAME/config.xml
+
+# PROJECT_NAME=VU_Bird_Flight; SVN_PROJECT=BirdFI; sed -i 's%${svnproject}%'"$SVN_PROJECT%" /var/lib/jenkins/jobs/$PROJECT_NAME/config.xml
+sed -i 's%${svnproject}%'"$SVN_PROJECT%" /var/lib/jenkins/jobs/$PROJECT_NAME/config.xml
+
+# PROJECT_NAME=VU_Bird_Flight; DJANGO_APP=BirdFI; sed -i 's%${djangoapp}%'"$DJANGO_APP%" /var/lib/jenkins/jobs/$PROJECT_NAME/config.xml
+sed -i 's%${djangoapp}%'"$DJANGO_APP%" /var/lib/jenkins/jobs/$PROJECT_NAME/config.xml
+
+####### Project credentials file.
+
+wget --no-cache -O /var/lib/jenkins/jobs/$PROJECT_NAME/django_subversion.credentials https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/django_subversion.credentials
+chown jenkins:jenkins /var/lib/jenkins/jobs/django_subversion.credentials
+
+# Jenkins will automagically encrypt the password, so we substitute that in a temporary file
+# before we move the credentials file into the jobs/$PROJECT_NAME directory.
+
+#PROJECT_NAME=VU_Bird_Flight; cp /var/lib/jenkins/jobs/django_subversion.credentials /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials.tmp
+cp /var/lib/jenkins/jobs/django_subversion.credentials /var/lib/jenkins/jobs/$PROJECT_NAME/django_subversion.credentials.tmp
+
+# PROJECT_NAME=VU_Bird_Flight; SVN_PASSWORD=monkeyblood#7t; sed -i 's%${password}%'"$SVN_PASSWORD%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials.tmp
+sed -i 's%${password}%'"$SVN_PASSWORD%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials.tmp
+
+#PROJECT_NAME=VU_Bird_Flight; mv /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials.tmp /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials
+mv /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials.tmp /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials
+touch /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials
+
+# PROJECT_NAME=VU_Bird_Flight; SVN_ROOT_URL=https://svn.vpac.org:443; sed -i 's%${realm}%'"$SVN_ROOT_URL%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentialsq
+sed -i 's%${realm}%'"$SVN_ROOT_URL%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials
+
+# PROJECT_NAME=VU_Bird_Flight; SVN_USERNAME=jenkins; sed -i 's%${username}%'"$SVN_USERNAME%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials
+sed -i 's%${username}%'"$SVN_USERNAME%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials
+
+
