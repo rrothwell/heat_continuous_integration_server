@@ -49,7 +49,7 @@ chown jenkins:jenkins /var/lib/jenkins/jobs/django_subversion.credentials
 # before we move the credentials file into the jobs/$PROJECT_NAME directory.
 
 #PROJECT_NAME=VU_Bird_Flight; cp /var/lib/jenkins/jobs/django_subversion.credentials /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials.tmp
-cp /var/lib/jenkins/jobs/django_subversion.credentials /var/lib/jenkins/jobs/$PROJECT_NAME/django_subversion.credentials.tmp
+cp /var/lib/jenkins/jobs/django_subversion.credentials /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials.tmp
 
 # PROJECT_NAME=VU_Bird_Flight; SVN_PASSWORD=monkeyblood#7t; sed -i 's%${password}%'"$SVN_PASSWORD%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials.tmp
 sed -i 's%${password}%'"$SVN_PASSWORD%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials.tmp
