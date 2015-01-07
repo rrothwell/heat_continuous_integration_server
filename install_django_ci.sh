@@ -58,8 +58,8 @@ sed -i 's%${password}%'"$SVN_PASSWORD%" /var/lib/jenkins/jobs/$PROJECT_NAME/subv
 mv /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials.tmp /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials
 touch /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials
 
-# PROJECT_NAME=VU_Bird_Flight; SVN_ROOT_URL=https://svn.vpac.org:443; sed -i 's%${realm}%'"$SVN_ROOT_URL%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentialsq
-sed -i 's%${realm}%'"$SVN_ROOT_URL%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials
+# PROJECT_NAME=VU_Bird_Flight; SVN_ROOT_URL=https://svn.vpac.org:443; sed -i 's%${realm}%'"$SVN_REALM%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentialsq
+sed -i 's%${realm}%'"$SVN_REALM%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials
 
 # PROJECT_NAME=VU_Bird_Flight; SVN_USERNAME=jenkins; sed -i 's%${username}%'"$SVN_USERNAME%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials
 sed -i 's%${username}%'"$SVN_USERNAME%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials
