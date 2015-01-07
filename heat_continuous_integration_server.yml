@@ -27,7 +27,7 @@ Parameters:
     ProjectName: 
         Description: "The name of the software development project. "
         Type: "String"
-        Default: "BirdFI"
+        Default: "VU_Bird_Flight"
     KeyName: 
         Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance. "
         Type: "String"
@@ -92,7 +92,7 @@ Parameters:
     SubversionRepositoryUsername: 
         Description: "A user name for access to the project repository. Change this!"
         Type: "String"
-        Default: "jbloggs"
+        Default: "jenkins"
     SubversionRepositoryPassword: 
         Description: "A password for access to the project repository. Change this!"
         Type: "String"
