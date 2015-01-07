@@ -42,7 +42,7 @@ sed -i 's%${djangoapp}%'"$DJANGO_APP%" /var/lib/jenkins/jobs/$PROJECT_NAME/confi
 
 ####### Project credentials file.
 
-wget --no-cache -O /var/lib/jenkins/jobs/$PROJECT_NAME/django_subversion.credentials https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/django_subversion.credentials
+wget --no-cache -O /var/lib/jenkins/jobs/django_subversion.credentials https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/django_subversion.credentials
 chown jenkins:jenkins /var/lib/jenkins/jobs/django_subversion.credentials
 
 # Jenkins will automagically encrypt the password, so we substitute that in a temporary file
