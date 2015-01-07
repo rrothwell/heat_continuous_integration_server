@@ -63,5 +63,3 @@ sed -i 's%${realm}%'"$SVN_ROOT_URL%" /var/lib/jenkins/jobs/$PROJECT_NAME/subvers
 
 # PROJECT_NAME=VU_Bird_Flight; SVN_USERNAME=jenkins; sed -i 's%${username}%'"$SVN_USERNAME%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials
 sed -i 's%${username}%'"$SVN_USERNAME%" /var/lib/jenkins/jobs/$PROJECT_NAME/subversion.credentials
-
-
