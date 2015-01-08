@@ -48,15 +48,17 @@ service jenkins restart
 
 cd /var/lib/jenkins
 
-COUNTER=0
-while [  wget http://localhost:8080/jnlpJars/jenkins-cli.jar ]; do
-    echo Try count: $COUNTER
-    let COUNTER=COUNTER+1 
-    if [ $COUNTER -gt 100 ]; then
-        echo "Not able to connect to download jenkins-cli.jar"
-        exit 1
+regex='200 OK'
+while true; do
+    status=$( wget http://localhost:8080 2>&1 )
+    if [[ "$status" =~ $regex ]]; then
+        echo ">>>>>>$status<<<<<<<<"
+        break
     fi
+    echo "Waiting for Jenkins to restart."
+    sleep 5
 done
+wget http://localhost:8080/jnlpJars/jenkins-cli.jar
 
 # Running Jenkins CLI script as anonymous initially
 # Need the Jenkins config.xml file to have anonymous script execution temporarily.
