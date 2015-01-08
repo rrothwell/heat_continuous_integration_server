@@ -44,16 +44,18 @@
       <command>#!/bin/bash
 virtualenv $WORKSPACE
 source $WORKSPACE/bin/activate
-pip install -r $WORKSPACE/webapp/${svnproject}/REQUIREMENTS.txt           
-python $WORKSPACE/webapp/${svnproject}/manage.py migrate 
-#pushd $WORKSPACE/webapp/${svnproject}/${djangoapp}/
-#python $WORKSPACE/webapp/${svnproject}/manage.py compilemessages
+pip install -r $WORKSPACE/webapp/BirdFI/REQUIREMENTS.txt           
+python $WORKSPACE/webapp/BirdFI/manage.py migrate 
+#pushd $WORKSPACE/webapp/BirdFI/BirdFI/
+#python $WORKSPACE/webapp/BirdFI/manage.py compilemessages
 #popd
-#python $WORKSPACE/webapp/${svnproject}/manage.py collectstatic --noinput
+#python $WORKSPACE/webapp/BirdFI/manage.py collectstatic --noinput
 #sudo apachectl graceful
-daemon --name=django_server python $WORKSPACE/webapp/${svnproject}/manage.py runserver
-python $WORKSPACE/webapp/${svnproject}/manage.py test --noinput
-</command>
+daemon --name=django_server python $WORKSPACE/webapp/BirdFI/manage.py runserver
+pushd $WORKSPACE/webapp/BirdFI
+python $WORKSPACE/webapp/BirdFI/manage.py test --noinput
+popd
+       </command>
     </hudson.tasks.Shell>
   </builders>
   <publishers/>
