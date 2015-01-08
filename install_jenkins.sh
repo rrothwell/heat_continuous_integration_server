@@ -67,6 +67,17 @@ echo "jenkins.model.Jenkins.instance.securityRealm.createAccount(\"jenkins_admin
 sed -i 's%<permission>hudson.model.Hudson.RunScripts:anonymous</permission>%%' /var/lib/jenkins/config.xml
 service jenkins restart
 
+regex='200 OK'
+while true; do
+    status=$( wget http://localhost:8080 2>&1 )
+    if [[ "$status" =~ $regex ]]; then
+        echo ">>>>>>$status<<<<<<<<"
+        break
+    fi
+    echo "Waiting for Jenkins to restart again."
+    sleep 5
+done
+
 echo "Installation complete. "
 echo "Complete the process by navigating to: http://$DOMAIN_NAME:8080/login?from=%2Fmanage and create an admin account with user name 'jenkins-admin.' "
 echo "Visit https://wiki.jenkins-ci.org/display/JENKINS/Use+Jenkins for instructions. "
