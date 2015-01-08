@@ -51,8 +51,7 @@ java -jar jenkins-cli.jar -s http://localhost:8080/ login --username jenkins_adm
 # PROJECT_NAME=VU_Bird_Flight; java -jar jenkins-cli.jar -s http://localhost:8080/ create-job $PROJECT_NAME < /var/lib/jenkins/jobs/tmp_config.xml
 java -jar jenkins-cli.jar -s http://localhost:8080/ create-job < /var/lib/jenkins/jobs/tmp_config.xml
 
-####### Configure Subversion authentication man wget
-for project.
+####### Configure Subversion authentication man wget for project.
 
 export SVN_SCRIPT="
 def url = '$SVN_REPO_URL' \n
@@ -67,4 +66,7 @@ new hudson.scm.SubversionSCM.DescriptorImpl().postCredential(url, upc, logWriter
 "
 echo -e $SVN_SCRIPT | java -jar jenkins-cli.jar -s http://localhost:8080/ groovy = 
 
+# Logout jenkins_admin.
+# java -jar jenkins-cli.jar -s http://localhost:8080/ logout
+java -jar jenkins-cli.jar -s http://localhost:8080/ logout
 
