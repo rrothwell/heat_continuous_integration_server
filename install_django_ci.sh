@@ -41,6 +41,8 @@ sed -i 's%${svnproject}%'"$SVN_PROJECT%" /var/lib/jenkins/jobs/tmp_config.xml
 sed -i 's%${djangoapp}%'"$DJANGO_APP%" /var/lib/jenkins/jobs/tmp_config.xml
 
 ####### Create project using configuration file.
+echo "Where am I."
+pwd
 
 # Login properly as jenkins_admin for subsequent script execution.
 # JENKINS_ADMIN_PASSWORD=monkeyblood#7t; java -jar jenkins-cli.jar -s http://localhost:8080/ login --username jenkins_admin --password $JENKINS_ADMIN_PASSWORD
@@ -49,7 +51,8 @@ java -jar jenkins-cli.jar -s http://localhost:8080/ login --username jenkins_adm
 # PROJECT_NAME=VU_Bird_Flight; java -jar jenkins-cli.jar -s http://localhost:8080/ create-job $PROJECT_NAME < /var/lib/jenkins/jobs/tmp_config.xml
 java -jar jenkins-cli.jar -s http://localhost:8080/ create-job < /var/lib/jenkins/jobs/tmp_config.xml
 
-####### Configure Subversion authentication for project.
+####### Configure Subversion authentication man wget
+for project.
 
 export SVN_SCRIPT="
 def url = '$SVN_REPO_URL' \n
