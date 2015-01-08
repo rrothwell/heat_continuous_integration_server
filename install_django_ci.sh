@@ -51,7 +51,7 @@ cd /var/lib/jenkins
 java -jar jenkins-cli.jar -s http://localhost:8080/ login --username jenkins_admin --password $JENKINS_ADMIN_PASSWORD
 
 # PROJECT_NAME=VU_Bird_Flight; java -jar jenkins-cli.jar -s http://localhost:8080/ create-job $PROJECT_NAME < /var/lib/jenkins/jobs/tmp_config.xml
-java -jar jenkins-cli.jar -s http://localhost:8080/ create-job < /var/lib/jenkins/jobs/tmp_config.xml
+java -jar jenkins-cli.jar -s http://localhost:8080/ create-job $PROJECT_NAME < /var/lib/jenkins/jobs/tmp_config.xml
 
 ####### Configure Subversion authentication man wget for project.
 
