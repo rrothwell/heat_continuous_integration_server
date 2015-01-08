@@ -89,10 +89,6 @@ Parameters:
         Description: "The project name in the repository. Change this!"
         Type: "String"
         Default: "BirdFI"
-    SubversionRepositoryRealm:
-        Description: "The realm Jenkins uses to organise the credentials for the repository. Change this!"
-        Type: "String"
-        Default: "https://svn.vpac.org:443"
     SubversionRepositoryUsername: 
         Description: "A user name for access to the project repository. Change this!"
         Type: "String"
@@ -171,7 +167,6 @@ Resources:
                         _subversion_account_password_: {Ref: SubversionUnixAccountPassword}
                         _subversion_repo_url_: {Ref: SubversionRepositoryURL}
                         _subversion_project_: {Ref: SubversionProject}
-                        _subversion_repo_realm_: {Ref: SubversionRepositoryRealm}
                         _subversion_repo_username_: {Ref: SubversionRepositoryUsername}
                         _subversion_repo_password_: {Ref: SubversionRepositoryPassword}
                         _install_django_: {Ref: InstallDjangoProject}
@@ -225,9 +220,6 @@ Resources:
                         
                         # Repository access by Jenkins
                         
-                        # E.g. https://svn.vpac.org:443
-                        export SVN_REALM=_subversion_repo_realm_
-                        echo "Repository Jenkins realm: $SVN_REALM"
                         # E.g. jenkins
                         export SVN_USERNAME=_subversion_repo_username_
                         echo "Repository username: $SVN_USERNAME"

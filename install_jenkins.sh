@@ -46,8 +46,17 @@ wget --no-cache -O /var/lib/jenkins/config.xml https://raw.githubusercontent.com
 chown jenkins:jenkins /var/lib/jenkins/config.xml
 service jenkins restart
 
-cd /var/lib/jenkins/jobs
-wget http://localhost:8080/jnlpJars/jenkins-cli.jar
+cd /var/lib/jenkins
+
+COUNTER=0
+while [  wget http://localhost:8080/jnlpJars/jenkins-cli.jar ]; do
+    echo Try count: $COUNTER
+    let COUNTER=COUNTER+1 
+    if [ $COUNTER -gt 100 ]; then
+        echo "Not able to connect to download jenkins-cli.jar"
+        exit 1
+    fi
+done
 
 # Running Jenkins CLI script as anonymous initially
 # Need the Jenkins config.xml file to have anonymous script execution temporarily.
