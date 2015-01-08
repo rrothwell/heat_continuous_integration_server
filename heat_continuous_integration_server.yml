@@ -256,5 +256,5 @@ Outputs:
     DomainSetting: 
         Description: "Register the domain name with a service such as DynDNS, before setting the domain name here. "
     ManualConfiguration: 
-        Description: "Complete the process by logging in at http://$DOMAIN_NAME:8080/ and creating a superadmin account. 
+        Description: "Complete the process by logging in at http://$DOMAIN_NAME:8080/ and creating a superadmin named account (jenkins_admin). 
 Comply with the Standard Security Setup: https://wiki.jenkins-ci.org/display/JENKINS/Standard+Security+Setup"
