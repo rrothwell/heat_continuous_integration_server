@@ -63,9 +63,13 @@ Parameters:
         Type: String
         Default: "jenkins.dontexist.com"
     JenkinsUnixAccountPassword: 
-        Description: "A password used for the Jenkins user. Change this!"
+        Description: "A password used for the Jenkins unix user. Change this!"
         Type: "String"
         Default: "fuzzyface*@9"
+    JenkinsAdminPassword: 
+        Description: "A password used for the Jenkins webadmin user. Change this!"
+        Type: "String"
+        Default: "monkeyblood#7t"
     InstallSubversion: # Install a Subversion instance.
         Description: "Flag to indicate a request to install Subversion on the Jenkins server. "
         Type: String
@@ -162,6 +166,7 @@ Resources:
                       - _project_name_: {Ref: ProjectName}
                         _domain_name_: {Ref: UrlDomainName}
                         _jenkins_account_password_: {Ref: JenkinsUnixAccountPassword}
+                        _jenkins_admin_password_: {Ref: JenkinsAdminPassword}                        
                         _install_svn_: {Ref: InstallSubversion}
                         _subversion_account_password_: {Ref: SubversionUnixAccountPassword}
                         _subversion_repo_url_: {Ref: SubversionRepositoryURL}
@@ -200,6 +205,8 @@ Resources:
                         
                         export JENKINS_ACCOUNT_PASSWORD="_jenkins_account_password_"
                         echo "Jenkins account password: $JENKINS_ACCOUNT_PASSWORD"
+                        export JENKINS_ADMIN_PASSWORD="_jenkins_admin_password_"
+                        echo "Jenkins admin password: $JENKINS_ADMIN_PASSWORD"
                         
                         export INSTALL_SVN=_install_svn_
                         echo "Install subversion: $INSTALL_SVN"

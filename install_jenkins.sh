@@ -46,6 +46,16 @@ wget --no-cache -O /var/lib/jenkins/config.xml https://raw.githubusercontent.com
 chown jenkins:jenkins /var/lib/jenkins/config.xml
 service jenkins restart
 
+cd /var/lib/jenkins/jobs
+wget http://localhost:8080/jnlpJars/jenkins-cli.jar
+
+# Running Jenkins CLI script as anonymous initially
+# Need the Jenkins config.xml file to have anonymous script execution temporarily.
+#JENKINS_ADMIN_PASSWORD=monkeyblood#7t; echo "jenkins.model.Jenkins.instance.securityRealm.createAccount(\"jenkins_admin\", \"$JENKINS_ADMIN_PASSWORD\")" | java -jar jenkins-cli.jar -s http://localhost:8080/ groovy =
+echo "jenkins.model.Jenkins.instance.securityRealm.createAccount(\"jenkins_admin\", \"$JENKINS_ADMIN_PASSWORD\")" | java -jar jenkins-cli.jar -s http://localhost:8080/ groovy =
+sed -i 's%<permission>hudson.model.Hudson.RunScripts:anonymous</permission>%%' /var/lib/jenkins/config.xml
+service jenkins restart
+
 echo "Installation complete. "
 echo "Complete the process by navigating to: http://$DOMAIN_NAME:8080/login?from=%2Fmanage and create an admin account with user name 'jenkins-admin.' "
 echo "Visit https://wiki.jenkins-ci.org/display/JENKINS/Use+Jenkins for instructions. "
