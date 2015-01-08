@@ -44,6 +44,8 @@ sed -i 's%${djangoapp}%'"$DJANGO_APP%" /var/lib/jenkins/jobs/tmp_config.xml
 echo "Where am I."
 pwd
 
+cd /var/lib/jenkins
+
 # Login properly as jenkins_admin for subsequent script execution.
 # JENKINS_ADMIN_PASSWORD=monkeyblood#7t; java -jar jenkins-cli.jar -s http://localhost:8080/ login --username jenkins_admin --password $JENKINS_ADMIN_PASSWORD
 java -jar jenkins-cli.jar -s http://localhost:8080/ login --username jenkins_admin --password $JENKINS_ADMIN_PASSWORD
