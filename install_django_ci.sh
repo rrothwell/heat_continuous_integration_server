@@ -21,8 +21,6 @@ sudo apt-get install -y python-numpy python-scipy cython
 
 echo "Configuring Django. "
 
-mkdir -p /var/lib/jenkins/jobs/$PROJECT_NAME
-
 ####### Project configuration file.
 
 wget --no-cache -O /var/lib/jenkins/jobs/django_config.xml https://raw.githubusercontent.com/rrothwell/heat_continuous_integration_server/master/django_config.xml
@@ -41,8 +39,6 @@ sed -i 's%${svnproject}%'"$SVN_PROJECT%" /var/lib/jenkins/jobs/tmp_config.xml
 sed -i 's%${djangoapp}%'"$DJANGO_APP%" /var/lib/jenkins/jobs/tmp_config.xml
 
 ####### Create project using configuration file.
-echo "Where am I."
-pwd
 
 cd /var/lib/jenkins
 
