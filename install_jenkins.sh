@@ -31,6 +31,16 @@ echo "Installing java support. "
 
 ./install_java.sh
 
+# Download and install daemonize
+# We need this to run the Django server in the background without leaking descriptors.
+# See: https://wiki.jenkins-ci.org/display/JENKINS/Spawning+processes+from+build
+apt-get -y install make git
+git clone git://github.com/bmc/daemonize.git
+cd daemonize
+sh configure
+make
+sudo make install
+
 # Download and install Jenkins
 
 echo "Installing Jenkins. "
